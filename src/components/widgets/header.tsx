@@ -16,9 +16,9 @@ let isLoggedIn = false;
 
 export default function Header() {
 	return (
-		<header className="w-screen flex justify-center">
+		<header className="w-screen flex justify-center sticky top-0 bg-white z-10">
 			<NavigationMenu className="py-2">
-				<NavigationMenuList>
+				<NavigationMenuList className="gap-6">
 					<NavigationMenuItem>
 						<Link href="/swipes" legacyBehavior passHref>
 							<NavigationMenuLink className={navigationMenuTriggerStyle() + "flex gap-2"}>
