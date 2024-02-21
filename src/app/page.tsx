@@ -1,12 +1,11 @@
-import Header from "@/components/widgets/header";
+import Header from "@/components/widgets/Header";
 
 export default function Home() {
 	return (
 		<>
-			<Header />
-			<main className="container">
-
-      </main>
+			<main>
+				{/* Вставить страницу Qwano */}
+			</main>
 		</>
 	);
 }
