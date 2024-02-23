@@ -17,88 +17,109 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { log } from "console";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import io from "Socket.IO-client";
 
-const chatMessages = [
+const deafaultChatMessages = [
 	{
 		id: 1,
 		name: "John",
 		message: "Hi, how are you?",
+		time: "10:00",
 	},
 	{
 		id: 2,
 		name: "Jane",
 		message: "I'm good, thanks!",
+		time: "10:01",
 	},
 	{
 		id: 3,
 		name: "John",
 		message: "What about you?",
+		time: "10:02",
 	},
 	{
 		id: 4,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:02",
 	},
 	{
 		id: 5,
 		name: "John",
 		message: "I'm also good, how about you?",
+		time: "10:02",
 	},
 	{
 		id: 6,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:02",
 	},
 	{
 		id: 7,
 		name: "John",
 		message: "I'm also good, how about you?",
+		time: "10:02",
 	},
 	{
 		id: 8,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:02",
 	},
 	{
 		id: 9,
 		name: "John",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 	{
 		id: 10,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 	{
 		id: 11,
 		name: "John",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 	{
 		id: 12,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 	{
 		id: 13,
 		name: "John",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 	{
 		id: 14,
 		name: "Jane",
 		message: "I'm also good, how about you?",
+		time: "10:03",
 	},
 ];
 
+interface IFormInput {
+	message: string;
+}
+
 const userName = "John";
+const userName2 = "Jane";
 let socket;
 
 export default function Chat() {
+	const [chatMessages, setChatMessages] = useState(deafaultChatMessages);
+	const [someoneTyping, setSomeoneTyping] = useState(false);
 	const messagesEndRef = useRef<null | HTMLSpanElement>(null);
 	const form = useForm({
 		defaultValues: {
@@ -106,8 +127,19 @@ export default function Chat() {
 		},
 	});
 
-	const onSubmit = (data: any) => {
-		console.log(data);
+	const onSubmit: SubmitHandler<IFormInput> = (data) => {
+		const now = new Date();
+		setChatMessages([
+			...chatMessages,
+			{
+				id: chatMessages.length + 1,
+				name: userName,
+				message: data.message,
+				time: `${now.getHours()}:${
+					now.getMinutes().toString().length === 1 ? `0${now.getMinutes()}` : now.getMinutes()
+				}`,
+			},
+		]);
 	};
 
 	useEffect(() => {
@@ -115,6 +147,15 @@ export default function Chat() {
 			behavior: "smooth",
 		});
 	}, [chatMessages]);
+
+	const onTyping = (e: FormEvent<HTMLInputElement>) => {
+		if(!someoneTyping) {
+			setSomeoneTyping(true);
+			setTimeout(() => {
+				setSomeoneTyping(false);
+			}, 1000);
+		}
+	};
 
 	// useEffect(() => {
 	// 	socketInitializer();
@@ -140,7 +181,7 @@ export default function Chat() {
 							<AvatarFallback>{message.name.split("")[0]}</AvatarFallback>
 						</Avatar>
 						<h2 className="text-lg font-bold">{message.name}</h2>
-						<small>{new Date().toLocaleTimeString()}</small>
+						<small>{message.time}</small>
 						<p>{message.message}</p>
 					</div>
 				))}
@@ -149,20 +190,19 @@ export default function Chat() {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="bg-white grid grid-cols-[1fr_auto] gap-2 items-center sticky bottom-0 py-2 px-2">
+					className="bg-white grid grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-2 items-center sticky bottom-0 py-2 px-2">
+					<p className="col-span-2">{someoneTyping ? `${userName2} is typing` : ""}</p>
 					<FormField
 						control={form.control}
 						name="message"
+						rules={{
+							required: "Type a message",
+						}}
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<textarea
-										id="message"
-										className="w-full bg-gray-200 rounded-md border-gray-300 px-4 py-1 focus:ring-blue-500 focus:border-blue-500"
-										{...field}
-									/>
+									<Input className="bg-gray-100" {...field} onInput={(e) => onTyping(e)} autoComplete="off" />
 								</FormControl>
-								<FormMessage />
 							</FormItem>
 						)}
 					/>
