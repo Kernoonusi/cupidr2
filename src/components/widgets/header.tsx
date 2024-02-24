@@ -1,58 +1,84 @@
-"use client";
-import Link from "next/link";
-import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport,
-	navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { auth, signOut } from '@/auth';
+import Link from 'next/link';
+import { Button } from '../ui/button';
+import Image from 'next/image';
 
-let isLoggedIn = false;
+function SignOut() {
+  return (
+    <form
+      action={async () => {
+        'use server';
+        await signOut();
+      }}>
+      <Button type="submit">Sign out</Button>
+    </form>
+  );
+}
 
-export default function Header() {
-	return (
-		<header className="w-screen flex justify-center sticky top-0 bg-white z-10">
-			<NavigationMenu className="py-2">
-				<NavigationMenuList className="gap-6">
-					<NavigationMenuItem>
-						<Link href="/swipes" legacyBehavior passHref>
-							<NavigationMenuLink className={navigationMenuTriggerStyle() + "flex gap-2"}>
-								<p className="hidden md:block">Swipes</p>
-								<span className="material-symbols-outlined">favorite</span>
-							</NavigationMenuLink>
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<Link href="/chat" legacyBehavior passHref>
-							<NavigationMenuLink className={navigationMenuTriggerStyle() + "flex gap-2"}>
-								<p className="hidden md:block">Chat</p>
-								<span className="material-symbols-outlined">chat</span>
-							</NavigationMenuLink>
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<Link href="/account" legacyBehavior passHref>
-							<NavigationMenuLink className={navigationMenuTriggerStyle() + "flex gap-2"}>
-								<p className="hidden md:block">Account</p>
-								<span className="material-symbols-outlined">account_circle</span>
-							</NavigationMenuLink>
-						</Link>
-					</NavigationMenuItem>
-					<NavigationMenuItem className="justify-self-end">
-						<Link href="/auth" legacyBehavior passHref>
-							<NavigationMenuLink className={navigationMenuTriggerStyle() + "flex gap-2"}>
-								<p className="hidden md:block">Log in</p>
-								<span className="material-symbols-outlined">login</span>
-							</NavigationMenuLink>
-						</Link>
-					</NavigationMenuItem>
-				</NavigationMenuList>
-			</NavigationMenu>
-		</header>
-	);
+export default async function Header() {
+  const session = await auth();
+  return (
+    <header className="w-screen flex justify-center sticky top-0 bg-white z-10">
+      <nav className="py-2">
+        <ul className="flex gap-12">
+          <li>
+            <Link
+              href="/swipes"
+              passHref
+              className="flex gap-1 px-3 py-2 hover:bg-slate-100 transition rounded-lg">
+              <p className="hidden md:block font-medium">Swipes</p>
+              <span className="material-symbols-outlined">favorite</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/chat"
+              passHref
+              className="flex gap-1 px-3 py-2 hover:bg-slate-100 transition rounded-lg">
+              <p className="hidden md:block font-medium">Chat</p>
+              <span className="material-symbols-outlined">chat</span>
+            </Link>
+          </li>
+          <li>
+            {session?.user?.image && session?.user?.name ? (
+              <Link
+                href="/account"
+                passHref
+                className="flex gap-1 px-3 py-2 hover:bg-slate-100 transition rounded-lg">
+                <p className="font-medium">{session?.user?.name}</p>
+                <Image
+                  src={session.user.image}
+                  alt="user profile picture"
+                  width={30}
+                  height={30}
+                  className="rounded-full"
+                />
+              </Link>
+            ) : (
+              <Link
+                href="/account"
+                passHref
+                className="flex gap-1 px-3 py-2 hover:bg-slate-100 transition rounded-lg">
+                <p className="hidden md:block font-medium">Account</p>
+                <span className="material-symbols-outlined">account_circle</span>
+              </Link>
+            )}
+          </li>
+          <li className="justify-self-end">
+            {session?.user ? (
+              <SignOut />
+            ) : (
+              <Link
+                href="/api/auth/signin"
+                passHref
+                className="flex gap-1 px-3 py-2 hover:bg-slate-100 transition rounded-lg">
+                <p className="hidden md:block font-medium">Sign in</p>
+                <span className="material-symbols-outlined">login</span>
+              </Link>
+            )}
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
 }
