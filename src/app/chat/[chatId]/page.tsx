@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import io from "Socket.IO-client";
 
 const deafaultChatMessages = [
 	{
