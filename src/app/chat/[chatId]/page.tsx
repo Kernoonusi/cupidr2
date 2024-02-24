@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import io from "Socket.IO-client";
 
 const deafaultChatMessages = [
 	{
@@ -149,7 +148,7 @@ export default function Chat() {
 	}, [chatMessages]);
 
 	const onTyping = (e: FormEvent<HTMLInputElement>) => {
-		if(!someoneTyping) {
+		if (!someoneTyping) {
 			setSomeoneTyping(true);
 			setTimeout(() => {
 				setSomeoneTyping(false);
@@ -201,7 +200,12 @@ export default function Chat() {
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input className="bg-gray-100" {...field} onInput={(e) => onTyping(e)} autoComplete="off" />
+									<Input
+										className="bg-gray-100"
+										{...field}
+										onInput={(e) => onTyping(e)}
+										autoComplete="off"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
