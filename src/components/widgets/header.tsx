@@ -14,7 +14,6 @@ function SignOut() {
     </form>
   );
 }
-
 export default async function Header() {
   const session = await auth();
   return (

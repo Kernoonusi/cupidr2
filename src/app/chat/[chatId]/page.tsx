@@ -148,7 +148,7 @@ export default function Chat() {
 	}, [chatMessages]);
 
 	const onTyping = (e: FormEvent<HTMLInputElement>) => {
-		if(!someoneTyping) {
+		if (!someoneTyping) {
 			setSomeoneTyping(true);
 			setTimeout(() => {
 				setSomeoneTyping(false);
@@ -200,7 +200,12 @@ export default function Chat() {
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input className="bg-gray-100" {...field} onInput={(e) => onTyping(e)} autoComplete="off" />
+									<Input
+										className="bg-gray-100"
+										{...field}
+										onInput={(e) => onTyping(e)}
+										autoComplete="off"
+									/>
 								</FormControl>
 							</FormItem>
 						)}
