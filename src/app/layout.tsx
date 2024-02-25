@@ -5,6 +5,7 @@ import "./globalicons.css";
 
 import { cn } from "@/lib/utils";
 import Header from "@/components/widgets/header";
+import { ThemeProvider } from "@/components/features/theme-provider";
 
 const fontSans = FontSans({
 	subsets: ["latin"],
@@ -24,8 +25,10 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-				<Header />
-				{children}
+				<ThemeProvider attribute="class" defaultTheme="system">
+					<Header />
+					{children}
+				</ThemeProvider>
 			</body>
 		</html>
 	);
