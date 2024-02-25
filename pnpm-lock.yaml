@@ -2535,7 +2535,7 @@ packages:
     dependencies:
       '@auth/core': 0.27.0
       next: 14.1.0(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.
+      react: 18.2.0
     dev: false
 
   /next@14.1.0(react-dom@18.2.0)(react@18.2.0):
