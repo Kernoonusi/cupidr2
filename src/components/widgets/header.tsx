@@ -1,8 +1,8 @@
 import { auth, signOut } from "@/auth";
-import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import LinkButton from "../shared/linkButton";
+import HeaderTitle from "./headerTitle";
 
 function SignOut() {
 	return (
@@ -11,19 +11,23 @@ function SignOut() {
 				"use server";
 				await signOut();
 			}}>
-			<Button type="submit" variant="ghost" className="gap-4">
+			<Button type="submit" variant="ghost" className="gap-4 flex items-center">
 				<p className="hidden md:block font-medium">Sign out</p>
 				<span className="material-symbols-outlined text-primary">logout</span>
 			</Button>
 		</form>
 	);
 }
+
 export default async function Header() {
 	const session = await auth();
+
 	return (
-		<header className="w-screen flex justify-center sticky top-0 bg-gray-200 z-10 dark:bg-dark">
+		<header className="w-screen flex flex-col justify-center items-center sticky top-0 bg-gray-200 z-10 dark:bg-dark md:flex-row">
+			<HeaderTitle />
+
 			<nav className="py-2">
-				<ul className="flex items-center gap-4 md:gap-12">
+				<ul className="flex items-center gap-12 md:gap-12">
 					<li>
 						<LinkButton href="/swipes" passHref>
 							<p className="hidden md:block font-medium">Swipes</p>
