@@ -27,12 +27,13 @@ import { Slider } from "@/components/ui/slider";
 import { Gender } from "../shared/enums";
 import RadioButton from "../shared/radioButton";
 import { Slider2thumb } from "../ui/slider2thumb";
+import { useState } from "react";
 
 const titles: Map<string, string> = new Map([
 	["/", "Cupidr"],
-	["/chat", "Chat"],
-	["/account", "Account"],
-	["/settings", "Settings"],
+	["chat", "Chat"],
+	["account", "Account"],
+	["settings", "Settings"],
 ]);
 
 interface IFormInput {
@@ -41,8 +42,9 @@ interface IFormInput {
 }
 
 export default function HeaderTitle() {
-	const pathname = usePathname();
-	const currentPageTitle = titles.get(pathname) || "Cupidr";
+	const pathname = usePathname()?.split("/")[1];
+	const currentPageTitle = titles.get(pathname || "/") || "Cupidr";
+	const [agePref, setAgePref] = useState([18, 50]);
 
 	const form = useForm({
 		defaultValues: {
@@ -50,6 +52,10 @@ export default function HeaderTitle() {
 			agePref: [18, 50],
 		},
 	});
+
+	const agePrefHandler = (value: number[]) => {
+		setAgePref(value);
+	};
 
 	const onSubmit: SubmitHandler<IFormInput> = (data) => {
 		console.log(data);
@@ -60,32 +66,35 @@ export default function HeaderTitle() {
 			<h1 className="text-3xl font-bold">{currentPageTitle}</h1>
 			{currentPageTitle === "Account" && (
 				<LinkButton href="/settings" passHref>
-					<span className="material-symbols-outlined">settings</span>
+					<span className="material-symbols-outlined text-3xl">settings</span>
 				</LinkButton>
 			)}
 			{currentPageTitle === "Chat" && (
 				<Drawer>
-					<DrawerTrigger>
-						<span className="material-symbols-outlined">tune</span>
+					<DrawerTrigger className="flex items-center">
+						<span className="material-symbols-outlined text-3xl">tune</span>
 					</DrawerTrigger>
 					<DrawerContent>
 						<DrawerHeader>
-							<DrawerTitle>Filters</DrawerTitle>
+							<DrawerTitle className="text-3xl">Filters</DrawerTitle>
 						</DrawerHeader>
 						<Form {...form}>
 							<form
 								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-8 flex flex-col justify-center">
+								className="space-y-8 flex flex-col justify-center px-4">
 								<FormField
 									control={form.control}
 									name="gender"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
-												<div className="flex mx-auto justify-center">
-													<RadioButton field={field} gender={Gender.male} />
-													<RadioButton field={field} gender={Gender.female} />
-													<RadioButton field={field} gender={Gender.both} />
+												<div className="flex flex-col gap-4">
+													<FormLabel className="text-2xl">Gender</FormLabel>
+													<div className="flex mx-auto justify-center">
+														<RadioButton field={field} gender={Gender.male} />
+														<RadioButton field={field} gender={Gender.female} />
+														<RadioButton field={field} gender={Gender.both} />
+													</div>
 												</div>
 											</FormControl>
 											<FormMessage />
@@ -98,13 +107,20 @@ export default function HeaderTitle() {
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
-												<Slider2thumb 
-												onValueChange={field.onChange} 
-												value={field.value}
-												min={18} 
-												max={99}
-												step={1}
-												/>
+												<div className="grid grid-cols-2 gap-4">
+													<FormLabel className="text-2xl">Age Range</FormLabel>
+													<p className="self-center text-center">{`${agePref[0]} - ${agePref[1]}`}</p>
+													<Slider2thumb
+														className="w-11/12 mx-auto col-span-2"
+														onValueChange={(e) => {
+															field.onChange(e), agePrefHandler(e);
+														}}
+														value={field.value}
+														min={18}
+														max={99}
+														step={1}
+													/>
+												</div>
 											</FormControl>
 											<FormMessage />
 										</FormItem>

@@ -1,0 +1,14 @@
+.radioButton:has(input:checked) {
+	@apply bg-primary;
+
+	& > span {
+		@apply text-white;
+	}
+}
+
+.radioButton + .radioButton{
+	@apply rounded-none;
+}
+.radioButton + .radioButton + .radioButton{
+	@apply rounded-r-md;
+}

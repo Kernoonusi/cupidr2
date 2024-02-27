@@ -25,7 +25,6 @@ export default async function Header() {
 	return (
 		<header className="w-screen flex flex-col justify-center items-center sticky top-0 bg-gray-200 z-10 dark:bg-dark md:flex-row">
 			<HeaderTitle />
-
 			<nav className="py-2">
 				<ul className="flex items-center gap-4 md:gap-12">
 					<li>
