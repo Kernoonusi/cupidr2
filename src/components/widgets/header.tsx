@@ -27,7 +27,7 @@ export default async function Header() {
 			<HeaderTitle />
 
 			<nav className="py-2">
-				<ul className="flex items-center gap-12 md:gap-12">
+				<ul className="flex items-center gap-4 md:gap-12">
 					<li>
 						<LinkButton href="/swipes" passHref>
 							<p className="hidden md:block font-medium">Swipes</p>
