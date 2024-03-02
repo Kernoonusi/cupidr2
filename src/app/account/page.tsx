@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AboutYou from "@/components/features/aboutYou";
+import AboutYou from "@/components/account/aboutYou";
 
 export default async function Account() {
 	const session = await auth();

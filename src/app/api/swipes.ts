@@ -1,6 +1,6 @@
 "use server";
 
-import User from "@/components/shared/types";
+import User from "@/types/types";
 
 const users: User[] = [
 	{

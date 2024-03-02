@@ -29,12 +29,12 @@ const chats = [
 
 export default function Chat() {
 	return (
-		<main className="w-full mx-auto md:max-w-7xl">
+		<main className="w-full mx-auto mt-4 md:max-w-7xl">
 			{chats.map((chat) => (
 				<Link
 					key={chat.id}
 					href="/chat/1"
-					className="grid grid-cols-[auto_1fr] grid-rows-2 px-4 py-2 gap-1 gap-x-6 items-center hover:bg-gray-100">
+					className="grid grid-cols-[auto_1fr] grid-rows-2 px-4 py-2 gap-1 gap-x-6 items-center hover:bg-gray-100 dark:hover:bg-dark lg:rounded-lg">
 					<Avatar className="grid row-span-2">
 						<AvatarImage src="https://github.com/shadcn.png" />
 						<AvatarFallback>{chat.name.split("")[0]}</AvatarFallback>

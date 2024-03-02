@@ -11,7 +11,7 @@ import {
 import { getNextSwipe, getNextSwipes } from "@/app/api/swipes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import User from "@/components/shared/types";
+import User from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Swipes() {
@@ -38,8 +38,8 @@ export default function Swipes() {
 		setSwipes([...swipes, newSwipe]);
 	}
 	return (
-		<main className="max-w-xl mx-auto px-4 relative overflow-hidden">
-			<Carousel className="bg-slate-200 rounded-3xl mt-4 overflow-hidden">
+		<main className="max-w-xl mx-auto px-4 relative  ">
+			<Carousel className="bg-slate-200 rounded-3xl relative mt-4  max-w-screen-xl max-h-[80dvh] md:max-h-[85dvh]">
 				{isLoading ? (
 					<>
 						<CarouselContent>
@@ -59,23 +59,22 @@ export default function Swipes() {
 					<>
 						<CarouselContent>
 							{swipes[0].photos.map((photo) => (
-								<CarouselItem key={photo}>
-									<Card>
-										<CardContent className="p-0 relative">
+								<CarouselItem className="overflow-hidden" key={photo} >
+									<Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
+										<CardContent className="p-0 relative rounded-3xl border-0">
 											<Image
 												src={photo}
 												alt={photo}
-												className="aspect-[9/16] object-cover rounded-3xl"
+												className="aspect-[9/16] border-0 object-cover rounded-3xl sm:aspect-auto"
 												width={900}
 												height={1600}
 											/>
-											<div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
+											<div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl sm:h-[70%]" />
 										</CardContent>
 									</Card>
 								</CarouselItem>
 							))}
 						</CarouselContent>
-
 						<div className="w-3/4 absolute bottom-32 left-10 text-white">
 							<h2 className="text-3xl">
 								{swipes[0].name}, {swipes[0].age}
@@ -100,8 +99,8 @@ export default function Swipes() {
 							className={`absolute w-fit h-fit p-5 pb-4 pt-6 px-6 rounded-full border-0 bg-primary dark:bg-primary right-10 bottom-8 `}>
 							<span className="material-symbols-outlined text-3xl text-white">favorite</span>
 						</Button>
-						<CarouselPrevious className="hidden md:block" />
-						<CarouselNext className="hidden md:block" />
+						<CarouselPrevious className="hidden h-full rounded-3xl p-2 md:block" />
+						<CarouselNext className="hidden h-full rounded-3xl p-2 md:block" />
 					</>
 				)}
 			</Carousel>

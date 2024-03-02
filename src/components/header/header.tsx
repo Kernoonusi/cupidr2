@@ -1,7 +1,7 @@
 import { auth, signOut } from "@/auth";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import LinkButton from "../shared/linkButton";
+import LinkButton from "./linkButton";
 import HeaderTitle from "./headerTitle";
 
 function SignOut() {
@@ -11,7 +11,10 @@ function SignOut() {
 				"use server";
 				await signOut();
 			}}>
-			<Button type="submit" variant="ghost" className="gap-4 flex items-center">
+			<Button
+				type="submit"
+				variant="ghost"
+				className="gap-4 flex items-center dark:hover:bg-zinc-800">
 				<p className="hidden md:block font-medium">Sign out</p>
 				<span className="material-symbols-outlined text-primary">logout</span>
 			</Button>
@@ -21,25 +24,26 @@ function SignOut() {
 
 export default async function Header() {
 	const session = await auth();
-
 	return (
-		<header className="w-screen flex flex-col justify-center items-center sticky top-0 bg-gray-200 z-10 dark:bg-dark md:flex-row">
+		<header className="w-screen flex flex-col justify-center items-center sticky top-0 border-b dark:bg-dark dark:border-b-zinc-700 z-10  md:flex-row lg:grid lg:grid-rows-1 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+			<div className="hidden w-full h-full md:order-0 lg:block"/>
 			<HeaderTitle />
-			<nav className="py-2">
-				<ul className="flex items-center gap-4 md:gap-12">
-					<li>
+			<div className="hidden w-full h-full md:order-2 lg:block"/>
+			<nav className="md:px-3 md:order-1">
+				<ul className="flex items-center gap-4 sm:gap-8">
+					<li className="has-[:checked]:border-b">
 						<LinkButton href="/swipes" passHref>
 							<p className="hidden md:block font-medium">Swipes</p>
 							<span className="material-symbols-outlined">favorite</span>
 						</LinkButton>
 					</li>
-					<li>
+					<li className="has-[:checked]:border-b">
 						<LinkButton href="/chat" passHref>
 							<p className="hidden md:block font-medium">Chat</p>
 							<span className="material-symbols-outlined">chat</span>
 						</LinkButton>
 					</li>
-					<li>
+					<li className="has-[:checked]:border-b">
 						{session?.user?.image && session?.user?.name ? (
 							<LinkButton href="/account" passHref>
 								<p className="font-medium">{session?.user?.name}</p>
@@ -70,6 +74,7 @@ export default async function Header() {
 					</li>
 				</ul>
 			</nav>
+			<div className="hidden w-full h-full md:order-4 lg:block"/>
 		</header>
 	);
 }
