@@ -2,20 +2,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import {
 	Form,
 	FormControl,
 	FormField,
 	FormItem,
-	FormLabel,
-	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -189,7 +179,7 @@ export default function Chat() {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="bg-white grid grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-2 items-center sticky bottom-0 py-2 px-2">
+					className="grid grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-2 items-center sticky bottom-0 py-2 px-2 dark:bg-dark">
 					<p className="col-span-2">{someoneTyping ? `${userName2} is typing` : ""}</p>
 					<FormField
 						control={form.control}
@@ -201,7 +191,9 @@ export default function Chat() {
 							<FormItem>
 								<FormControl>
 									<Input
-										className="bg-gray-100"
+										className="bg-gray-100 shadow-md dark:bg-slate-800"
+										type="text"
+										placeholder="Type a message"
 										{...field}
 										onInput={(e) => onTyping(e)}
 										autoComplete="off"
@@ -210,8 +202,8 @@ export default function Chat() {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit">
-						<span className="material-symbols-outlined">send</span>
+					<Button type="submit" className="bg-primary shadow-md dark:bg-primary">
+						<span className="material-symbols-outlined text-white">send</span>
 					</Button>
 				</form>
 			</Form>

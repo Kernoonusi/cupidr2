@@ -52,8 +52,8 @@ export default function Swipes() {
 							<Skeleton className="h-5 w-60 bg-slate-300" />
 							<Skeleton className="h-5 w-60 bg-slate-300" />
 						</div>
-						<Skeleton className="absolute h-20 w-20 rounded-full left-10 bottom-8 bg-red-300" />
-						<Skeleton className="absolute h-20 w-20 rounded-full right-10 bottom-8 bg-blue-300" />
+						<Skeleton className="absolute h-20 w-20 rounded-full left-10 bottom-8 bg-secondary dark:bg-secondary" />
+						<Skeleton className="absolute h-20 w-20 rounded-full right-10 bottom-8 bg-primary dark:bg-primary" />
 					</>
 				) : (
 					<>
@@ -90,14 +90,14 @@ export default function Swipes() {
 							variant="outline"
 							size="icon"
 							onClick={dislike}
-							className={`absolute w-fit h-fit p-5 px-6 rounded-full border-0 bg-red-500 left-10 bottom-8`}>
+							className={`absolute w-fit h-fit p-5 px-6 rounded-full border-0 bg-secondary dark:bg-secondary left-10 bottom-8`}>
 							<span className="material-symbols-outlined text-3xl text-white">close</span>
 						</Button>
 						<Button
 							variant="outline"
 							size="icon"
 							onClick={like}
-							className={`absolute w-fit h-fit p-5 pb-4 pt-6 px-6 rounded-full border-0 bg-blue-500 right-10 bottom-8 `}>
+							className={`absolute w-fit h-fit p-5 pb-4 pt-6 px-6 rounded-full border-0 bg-primary dark:bg-primary right-10 bottom-8 `}>
 							<span className="material-symbols-outlined text-3xl text-white">favorite</span>
 						</Button>
 						<CarouselPrevious className="hidden md:block" />
