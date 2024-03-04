@@ -1,11 +1,12 @@
 "use client";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SendHorizontal } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 
 const deafaultChatMessages = [
 	{
