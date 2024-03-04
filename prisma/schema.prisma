@@ -1,0 +1,137 @@
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum Gender {
+  male
+  female
+  both
+}
+
+enum matchType {
+  like
+  dislike
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  birthday      DateTime? @db.Date
+  gender        Gender?
+  bio           String?
+  geolocation   String?
+  image         String?
+  password      String?
+  role         UserRole  @default(USER)
+
+  accounts     Account[]
+  Preferences  Preferences[]
+  Images       Images[]
+  Messages     Messages[]
+  Participants Participants[]
+
+  MatchPreferencesExcluder MatchPreferences[] @relation("excluder")
+  MatchPreferencesExcludee MatchPreferences[] @relation("excludee")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String()
+  access_token      String? @db.String()
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String()
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model Preferences {
+  id     String @id @default(cuid())
+  userId String @unique
+  gender Gender
+  minAge Int    @db.Int2
+  maxAge Int    @db.Int2
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Images {
+  id     String @id @default(cuid())
+  userId String
+  url    String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Participants {
+  id        String   @id @default(cuid())
+  userId    String
+  chatId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id])
+
+  @@unique([userId, chatId])
+}
+
+model Chat {
+  id           String         @id @default(cuid())
+  createdAt    DateTime       @default(now())
+  participants Participants[]
+  messages     Messages[]
+}
+
+model Messages {
+  id        String   @id @default(cuid())
+  chatId    String
+  senderId  String
+  message   String
+  createdAt DateTime @default(now())
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+}
+
+model MatchPreferences {
+  id         String    @id @default(cuid())
+  excluderId String
+  excludeeId String
+  type       matchType
+  excluder   User      @relation("excluder", fields: [excluderId], references: [id], onDelete: Cascade)
+  excludee   User      @relation("excludee", fields: [excludeeId], references: [id], onDelete: Cascade)
+}
