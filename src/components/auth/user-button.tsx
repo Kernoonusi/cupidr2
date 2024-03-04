@@ -19,7 +19,7 @@ export const UserButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center space-x-4">
-        <p className="font-mono text-lg">{user?.name}</p>
+        {/* <p className="font-mono text-lg">{user?.name}</p> */}
         <Avatar>
           <AvatarImage src={user?.image || ''} alt="User avatar" />
           <AvatarFallback className="bg-emerald-500">

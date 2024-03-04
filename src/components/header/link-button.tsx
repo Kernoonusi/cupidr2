@@ -17,10 +17,10 @@ export default function LinkButton({
 			<Link
 				href={href}
 				passHref={passHref}
-				className="flex w-max gap-4 px-3 py-4 transition rounded-lg hover:text-primary dark:hover:text-primary">
+				className="flex w-max gap-4 px-3 py-4 transition items-center justify-center rounded-lg hover:text-primary dark:hover:text-primary">
 				{children}
 			</Link>
-			<input type="radio" placeholder="current-page" name="current-page" checked={"/" + pathname === href} className="hidden" />
+			<input onChange={()=>{}} type="radio" placeholder="current-page" name="current-page" checked={"/" + pathname === href} className="hidden" />
 		</>
 	);
 }

@@ -7,7 +7,7 @@ export default async function Account() {
 	const session = await auth();
 
 	return (
-		<main className="max-w-7xl mx-auto px-4 flex flex-col items-center gap-4">
+		<main className="max-w-7xl justify-center mx-auto px-4 flex flex-col items-center gap-4">
 			<Avatar className="mt-6 w-32 h-32">
 				<AvatarImage src={session?.user?.image || ""} alt="@shadcn" />
 				<AvatarFallback>{session?.user?.name ? session?.user?.name[0] : ""}</AvatarFallback>
