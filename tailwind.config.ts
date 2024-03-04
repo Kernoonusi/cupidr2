@@ -37,7 +37,11 @@ const config = {
         secondary: "#598978",
         tertiary: "#85AB8E",
         quaternary: "#D1C13D",
-        dark: "#15171F"
+        dark: "#15171F",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
       },
     },
   },
