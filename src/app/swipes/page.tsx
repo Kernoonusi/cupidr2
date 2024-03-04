@@ -40,23 +40,19 @@ export default function Swipes() {
 	}
 	return (
 		<main className="max-w-xl mx-auto px-4 relative  ">
-			<Carousel className="bg-slate-200 rounded-3xl relative mt-4  max-w-screen-xl max-h-[80dvh] md:max-h-[85dvh]">
-				{isLoading ? (
-					<>
-						<CarouselContent>
-							<CarouselItem>
-								<Skeleton className="aspect-[9/16]" />
-							</CarouselItem>
-						</CarouselContent>
-						<div className="w-3/4 absolute bottom-32 left-10 flex flex-col gap-2">
-							<Skeleton className="h-10 w-20 bg-slate-300" />
-							<Skeleton className="h-5 w-60 bg-slate-300" />
-							<Skeleton className="h-5 w-60 bg-slate-300" />
-						</div>
-						<Skeleton className="absolute h-20 w-20 rounded-full left-10 bottom-8 bg-secondary dark:bg-secondary" />
-						<Skeleton className="absolute h-20 w-20 rounded-full right-10 bottom-8 bg-primary dark:bg-primary" />
-					</>
-				) : (
+			{isLoading ? (
+				<>
+					<Skeleton className="mt-4 aspect-[9/16] rounded-3xl h-[80dvh] md:h-[85dvh] md:aspect-[14/16]" />
+					<div className="w-3/4 absolute bottom-32 left-10 flex flex-col gap-2">
+						<Skeleton className="h-10 w-20 bg-slate-300" />
+						<Skeleton className="h-5 w-60 bg-slate-300" />
+						<Skeleton className="h-5 w-60 bg-slate-300" />
+					</div>
+					<Skeleton className="absolute h-20 w-20 rounded-full left-10 bottom-8 bg-secondary dark:bg-secondary" />
+					<Skeleton className="absolute h-20 w-20 rounded-full right-10 bottom-8 bg-primary dark:bg-primary" />
+				</>
+			) : (
+				<Carousel className="bg-slate-200 rounded-3xl relative mt-4 max-w-screen-xl max-h-[80dvh] md:max-h-[85dvh]">
 					<>
 						<CarouselContent>
 							{swipes[0].photos.map((photo) => (
@@ -103,8 +99,8 @@ export default function Swipes() {
 						<CarouselPrevious className="hidden h-full rounded-3xl p-2 md:block" />
 						<CarouselNext className="hidden h-full rounded-3xl p-2 md:block" />
 					</>
-				)}
-			</Carousel>
+				</Carousel>
+			)}
 		</main>
 	);
 }
