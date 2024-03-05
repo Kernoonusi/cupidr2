@@ -7,6 +7,7 @@ import Google from 'next-auth/providers/google';
 import { LoginSchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import { getAccountByUserId } from '@/data/account';
+import { getImagesByUserId } from './data/image';
 
 export default {
   providers: [
@@ -25,10 +26,19 @@ export default {
 
           const existingAccount = await getAccountByUserId(user.id);
 
+          const userImages = await getImagesByUserId(user.id);
+
           if (passwordsMatch)
             return {
               ...user,
               isOAuth: !!existingAccount,
+              images:
+                userImages?.map((image) => {
+                  return {
+                    url: image.url,
+                    path: image.path,
+                  };
+                }) || [],
             };
         }
 

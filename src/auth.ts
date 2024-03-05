@@ -12,6 +12,10 @@ declare module 'next-auth' {
   interface User {
     role: UserRole;
     isOAuth: boolean;
+    images: {
+      url: string;
+      path: string;
+    }[];
   }
 }
 
@@ -19,6 +23,10 @@ declare module 'next-auth/jwt' {
   interface JWT {
     role: UserRole;
     isOAuth: boolean;
+    images: {
+      url: string;
+      path: string;
+    }[];
   }
 }
 
@@ -71,6 +79,7 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth;
+        session.user.images = token.images;
       }
 
       return session;
@@ -78,7 +87,7 @@ export const {
     async jwt({ token, user }) {
       if (!token.sub) return token;
 
-      const existingUser = user || (await getUserById(token.sub));
+      const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;
 
@@ -91,6 +100,12 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
+      token.images = existingUser.images.map((image) => {
+        return {
+          url: image.url,
+          path: image.path,
+        };
+      });
 
       return token;
     },

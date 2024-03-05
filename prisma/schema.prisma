@@ -34,16 +34,16 @@ model User {
   geolocation   String?
   image         String?
   password      String?
-  role         UserRole  @default(USER)
+  role          UserRole  @default(USER)
 
   accounts     Account[]
-  Preferences  Preferences[]
-  Images       Images[]
-  Messages     Messages[]
-  Participants Participants[]
+  preferences  Preferences[]
+  images       Images[]
+  messages     Messages[]
+  participants Participants[]
 
-  MatchPreferencesExcluder MatchPreferences[] @relation("excluder")
-  MatchPreferencesExcludee MatchPreferences[] @relation("excludee")
+  matchPreferencesExcluder MatchPreferences[] @relation("excluder")
+  matchPreferencesExcludee MatchPreferences[] @relation("excludee")
 }
 
 model Account {
@@ -96,6 +96,7 @@ model Images {
   id     String @id @default(cuid())
   userId String
   url    String @unique
+  path   String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
