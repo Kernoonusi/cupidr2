@@ -13,7 +13,7 @@ export default function GenderRadioGroup({
 		<>
 			<label
 				htmlFor={`genderMale`}
-				className="flex items-center px-4 py-2 bg-white border-0 rounded-l-md shadow-sm cursor-pointer group hover:bg-secondary has-[:checked]:bg-secondary">
+				className="flex items-center px-4 py-2 bg-white border-0 rounded-l-md shadow-sm cursor-pointer border-r-2 dark:border-dark group hover:bg-secondary has-[:checked]:bg-secondary">
 				<input
 					type="radio"
 					{...field}
@@ -30,7 +30,7 @@ export default function GenderRadioGroup({
 
 			<label
 				htmlFor={`genderFemale`}
-				className="flex items-center px-4 py-2 bg-white border-0 shadow-sm cursor-pointer group hover:bg-secondary has-[:checked]:bg-secondary">
+				className="flex items-center px-4 py-2 bg-white border-0 shadow-sm cursor-pointer group border-r-2 dark:border-dark hover:bg-secondary has-[:checked]:bg-secondary">
 				<input
 					type="radio"
 					{...field}

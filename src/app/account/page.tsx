@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AboutYou from "@/components/account/aboutYou";
+import AboutYou from "@/components/account/about-you";
+import PhotosGallery from "@/components/account/photos-gallery";
 
 export default async function Account() {
 	const session = await auth();
@@ -15,11 +16,11 @@ export default async function Account() {
 			<h1 className="text-2xl font-bold text-center">{session?.user?.name}, 18</h1>
 			<Card className="w-full mt-16 dark:bg-dark">
 				<CardHeader>
-					<CardTitle>Photos</CardTitle>
-					<CardDescription>More pictures is better</CardDescription>
+					<CardTitle>Your photos</CardTitle>
+					<CardDescription>More is better</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<p>Здесь будут все фото</p>
+				<CardContent className="grid grid-cols-3 gap-4">
+					<PhotosGallery />
 				</CardContent>
 			</Card>
 			<Card className="w-full dark:bg-dark">
@@ -28,7 +29,7 @@ export default async function Account() {
 					<CardDescription>Write information here</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<AboutYou/>
+					<AboutYou />
 				</CardContent>
 			</Card>
 		</main>
