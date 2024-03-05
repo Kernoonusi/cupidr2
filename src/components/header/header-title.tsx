@@ -43,19 +43,14 @@ export default function HeaderTitle() {
 		<section className="px-4 py-2 w-full h-12 flex justify-between items-center gap-8 md:order-3 md:justify-normal md:w-fit">
 			<h1 className="text-3xl font-bold md:hidden">{currentPageTitle}</h1>
 			<div
-				className={
-					"flex items-center " +
-					(currentPageTitle === "Account" || currentPageTitle === "Settings" ? "" : "hidden") +
-					" md:flex"
-				}>
-				<UserButton/>
+				className={`flex items-center 
+					${currentPageTitle === "Account" || currentPageTitle === "Settings" ? "" : "hidden"} md:flex`}>
+				<UserButton />
 			</div>
 			{user && !sm && (
 				<Drawer>
 					<DrawerTrigger
-						className={
-							"flex items-center " + (currentPageTitle === "Chat" ? "" : "hidden") + " md:flex"
-						}>
+						className={`flex items-center ${currentPageTitle === "Chat" ? "" : "hidden"} md:flex`}>
 						<SlidersHorizontal />
 					</DrawerTrigger>
 					<DrawerContent className="dark:bg-dark">
@@ -69,9 +64,7 @@ export default function HeaderTitle() {
 			{user && sm && (
 				<Dialog>
 					<DialogTrigger
-						className={
-							"flex items-center " + (currentPageTitle === "Chat" ? "" : "hidden") + " md:flex"
-						}>
+						className={`flex items-center ${currentPageTitle === "Chat" ? "" : "hidden"} md:flex`}>
 						<SlidersHorizontal />
 					</DialogTrigger>
 					<DialogContent className="dark:bg-dark">
