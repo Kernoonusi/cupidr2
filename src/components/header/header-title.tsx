@@ -3,7 +3,6 @@ import { usePathname } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
 
 import LinkButton from "@/components/header/link-button";
-import LinkButton from "@/components/header/link-button";
 import {
   Drawer,
   DrawerClose,
@@ -13,9 +12,6 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { useMediaQueries } from "@/hooks/use-media-queries";
 } from "@/components/ui/drawer";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useMediaQueries } from "@/hooks/use-media-queries";

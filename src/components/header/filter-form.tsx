@@ -32,9 +32,6 @@ export function PreferencesForm() {
   const agePrefHandler = (value: number[]) => {
     setAgePref(value);
   };
-  const agePrefHandler = (value: number[]) => {
-    setAgePref(value);
-  };
 
   const onSubmit: SubmitHandler<z.infer<typeof PreferencesSchema>> = (data) => {
     console.log(data);
