@@ -1,0 +1,23 @@
+"use client";
+import { XCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
+
+import { deleteImage } from "@/actions/delete-image";
+
+export function DeletePhoto({ path }: { path: string }) {
+  const { update } = useSession();
+  const onClick = (path: string) => {
+    deleteImage(path).then(() => update());
+  };
+
+  return (
+    <button
+      type="button"
+      className="absolute top-2 right-2"
+      onClick={() => onClick(path)}
+    >
+      <p className="sr-only">delete photo</p>
+      <XCircle size={30} />
+    </button>
+  );
+}

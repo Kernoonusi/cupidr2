@@ -50,8 +50,8 @@ export default function AboutYou() {
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
+            <FormItem className="flex gap-4 items-center">
+              <FormLabel className="w-20">Description</FormLabel>
               <FormControl>
                 <Textarea className="resize-none" {...field} />
               </FormControl>
@@ -63,10 +63,13 @@ export default function AboutYou() {
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Gender</FormLabel>
+            <FormItem className="flex gap-4 items-center">
+              <FormLabel className="w-20">Gender</FormLabel>
               <FormControl>
-                <RadioGroup defaultValue={field.value}>
+                <RadioGroup
+                  defaultValue={field.value}
+                  className="flex gap-4 items-center"
+                >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem
                       {...field}
@@ -93,8 +96,8 @@ export default function AboutYou() {
           control={form.control}
           name="location"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
+            <FormItem className="flex gap-4 items-center">
+              <FormLabel className="w-20">Location</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -120,8 +123,8 @@ export default function AboutYou() {
           control={form.control}
           name="age"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Age</FormLabel>
+            <FormItem className="flex gap-4 items-center ">
+              <FormLabel className="w-20">Age</FormLabel>
               <FormControl>
                 <Input type="number" min={18} max={99} {...field} />
               </FormControl>
