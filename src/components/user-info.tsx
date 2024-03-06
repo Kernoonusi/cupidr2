@@ -1,5 +1,5 @@
-import { User } from 'next-auth';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { User } from "next-auth";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface UserInfoProps {
   user?: User;

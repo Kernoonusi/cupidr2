@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import { currentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
-import { deleteFile } from '@/lib/storage';
+import { currentUser } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { deleteFile } from "@/lib/storage";
 
 export const deleteImage = async (file_path: string) => {
   const user = await currentUser();
@@ -10,7 +10,7 @@ export const deleteImage = async (file_path: string) => {
   const userHasImage = user?.images.some((image) => image.path === file_path);
 
   if (!userHasImage) {
-    return { error: 'You do not have permission to delete this image' };
+    return { error: "You do not have permission to delete this image" };
   }
 
   try {
@@ -22,8 +22,8 @@ export const deleteImage = async (file_path: string) => {
       },
     });
 
-    return { success: 'Image deleted!' };
+    return { success: "Image deleted!" };
   } catch (error) {
-    return { error: 'An error occurred' };
+    return { error: "An error occurred" };
   }
 };

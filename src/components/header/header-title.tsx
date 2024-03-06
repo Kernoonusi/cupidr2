@@ -1,7 +1,7 @@
-'use client';
-import { usePathname } from 'next/navigation';
+"use client";
+import { usePathname } from "next/navigation";
 
-import LinkButton from '@/components/header/link-button';
+import LinkButton from "@/components/header/link-button";
 import {
   Drawer,
   DrawerClose,
@@ -11,9 +11,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { useMediaQueries } from '@/hooks/use-media-queries';
+} from "@/components/ui/drawer";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMediaQueries } from "@/hooks/use-media-queries";
 import {
   Dialog,
   DialogContent,
@@ -21,21 +21,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import FilterForm from '@/components/header/filter-form';
-import { UserButton } from '../auth/user-button';
-import { SlidersHorizontal } from 'lucide-react';
+} from "@/components/ui/dialog";
+import FilterForm from "@/components/header/filter-form";
+import { UserButton } from "../auth/user-button";
+import { SlidersHorizontal } from "lucide-react";
 
 const titles: Map<string, string> = new Map([
-  ['/', 'Cupidr'],
-  ['chat', 'Chat'],
-  ['account', 'Account'],
-  ['settings', 'Settings'],
+  ["/", "Cupidr"],
+  ["chat", "Chat"],
+  ["account", "Account"],
+  ["settings", "Settings"],
 ]);
 
 export default function HeaderTitle() {
-  const pathname = usePathname()?.split('/')[1];
-  const currentPageTitle = titles.get(pathname || '/') || 'Cupidr';
+  const pathname = usePathname()?.split("/")[1];
+  const currentPageTitle = titles.get(pathname || "/") || "Cupidr";
   const { sm } = useMediaQueries();
   const user = useCurrentUser();
 

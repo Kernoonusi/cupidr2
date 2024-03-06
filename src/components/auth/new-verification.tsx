@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { BeatLoader } from 'react-spinners';
-import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { BeatLoader } from "react-spinners";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
-import { CardWrapper } from '@/components/auth/card-wrapper';
-import { newVerification } from '@/actions/new-verification';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
+import { CardWrapper } from "@/components/auth/card-wrapper";
+import { newVerification } from "@/actions/new-verification";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 export const NewVerificationForm = () => {
-  const [error, setError] = useState<string | undefined>('');
-  const [success, setSuccess] = useState<string | undefined>('');
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const searchParams = useSearchParams();
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
     if (success || error) {
@@ -21,7 +21,7 @@ export const NewVerificationForm = () => {
     }
 
     if (!token) {
-      return setError('Missing token');
+      return setError("Missing token");
     }
 
     newVerification(token)
@@ -30,7 +30,7 @@ export const NewVerificationForm = () => {
         setSuccess(data?.success);
       })
       .catch(() => {
-        setError('An error occurred');
+        setError("An error occurred");
       });
   }, [token, success, error]);
 
@@ -42,7 +42,8 @@ export const NewVerificationForm = () => {
     <CardWrapper
       headerLabel="Confirming your verification"
       backButtonHref="/auth/login"
-      backButtonLabel="Back to login">
+      backButtonLabel="Back to login"
+    >
       <div className="flex items-center w-full justify-center">
         {!success && !error && <BeatLoader color="#8B0000" />}
         <FormSuccess message={success} />

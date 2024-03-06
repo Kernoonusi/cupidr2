@@ -1,14 +1,14 @@
-import 'next-auth/jwt';
-import { UserRole } from '@prisma/client';
-import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import "next-auth/jwt";
+import { UserRole } from "@prisma/client";
+import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
-import { db } from '@/lib/db';
-import authConfig from '@/auth.config';
-import { getUserById } from './data/user';
-import { getAccountByUserId } from './data/account';
+import { db } from "@/lib/db";
+import authConfig from "@/auth.config";
+import { getUserById } from "./data/user";
+import { getAccountByUserId } from "./data/account";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface User {
     role: UserRole;
     isOAuth: boolean;
@@ -19,7 +19,7 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole;
     isOAuth: boolean;
@@ -37,8 +37,8 @@ export const {
   signOut,
 } = NextAuth({
   pages: {
-    signIn: '/auth/login',
-    error: '/auth/error',
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   events: {
     async linkAccount({ user }) {
@@ -51,7 +51,7 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       // Allow OAuth providers to sign in without email verification
-      if (account?.provider !== 'credentials') {
+      if (account?.provider !== "credentials") {
         return true;
       }
 
@@ -111,6 +111,6 @@ export const {
     },
   },
   adapter: PrismaAdapter(db),
-  session: { strategy: 'jwt' },
+  session: { strategy: "jwt" },
   ...authConfig,
 });

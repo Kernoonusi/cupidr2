@@ -1,4 +1,4 @@
-import * as nodemailer from 'nodemailer';
+import * as nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -16,7 +16,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to: email,
-    subject: 'Reset your password',
+    subject: "Reset your password",
     html: `
       <p>Click the link below to reset your password:</p>
       <a href="${resetLink}">${resetLink}</a>
@@ -30,7 +30,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   await transporter.sendMail({
     from: process.env.SMTP_USER,
     to: email,
-    subject: 'Verify your email',
+    subject: "Verify your email",
     html: `
       <p>Click the link below to verify your email address:</p>
       <a href="${confirmLink}">${confirmLink}</a>

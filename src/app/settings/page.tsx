@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTransition, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition, useState } from "react";
+import { useSession } from "next-auth/react";
 
 import {
   Select,
@@ -12,11 +12,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { SettingsSchema } from '@/schemas';
-import { settings } from '@/actions/settings';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+} from "@/components/ui/select";
+import { SettingsSchema } from "@/schemas";
+import { settings } from "@/actions/settings";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormField,
@@ -24,12 +24,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { UserRole } from '@prisma/client';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { UserRole } from "@prisma/client";
 
 const SettingsPage = () => {
   const user = useCurrentUser();
@@ -67,7 +67,7 @@ const SettingsPage = () => {
           }
         })
         .catch(() => {
-          setError('Something went wrong');
+          setError("Something went wrong");
         });
     });
   };
@@ -88,7 +88,11 @@ const SettingsPage = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Name" disabled={isPending} />
+                      <Input
+                        {...field}
+                        placeholder="Name"
+                        disabled={isPending}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,7 +164,8 @@ const SettingsPage = () => {
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
-                      defaultValue={field.value}>
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a role" />
