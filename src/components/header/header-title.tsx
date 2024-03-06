@@ -1,7 +1,7 @@
-'use client';
-import { usePathname } from 'next/navigation';
+"use client";
+import { usePathname } from "next/navigation";
 
-import LinkButton from '@/components/header/link-button';
+import LinkButton from "@/components/header/link-button";
 import {
   Drawer,
   DrawerClose,
@@ -11,9 +11,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { useMediaQueries } from '@/hooks/use-media-queries';
+} from "@/components/ui/drawer";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMediaQueries } from "@/hooks/use-media-queries";
 import {
   Dialog,
   DialogContent,
@@ -21,21 +21,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import FilterForm from '@/components/header/filter-form';
-import { UserButton } from '../auth/user-button';
-import { SlidersHorizontal } from 'lucide-react';
+} from "@/components/ui/dialog";
+import FilterForm from "@/components/header/filter-form";
+import { UserButton } from "../auth/user-button";
+import { SlidersHorizontal } from "lucide-react";
 
 const titles: Map<string, string> = new Map([
-  ['/', 'Cupidr'],
-  ['chat', 'Chat'],
-  ['account', 'Account'],
-  ['settings', 'Settings'],
+  ["/", "Cupidr"],
+  ["chat", "Chat"],
+  ["account", "Account"],
+  ["settings", "Settings"],
 ]);
 
 export default function HeaderTitle() {
-  const pathname = usePathname()?.split('/')[1];
-  const currentPageTitle = titles.get(pathname || '/') || 'Cupidr';
+  const pathname = usePathname()?.split("/")[1];
+  const currentPageTitle = titles.get(pathname || "/") || "Cupidr";
   const { sm } = useMediaQueries();
   const user = useCurrentUser();
 
@@ -45,10 +45,13 @@ export default function HeaderTitle() {
       {user && (
         <div
           className={
-            'flex items-center ' +
-            (currentPageTitle === 'Account' || currentPageTitle === 'Settings' ? '' : 'hidden') +
-            ' md:flex'
-          }>
+            "flex items-center " +
+            (currentPageTitle === "Account" || currentPageTitle === "Settings"
+              ? ""
+              : "hidden") +
+            " md:flex"
+          }
+        >
           <UserButton />
         </div>
       )}
@@ -56,8 +59,11 @@ export default function HeaderTitle() {
         <Drawer>
           <DrawerTrigger
             className={
-              'flex items-center ' + (currentPageTitle === 'Chat' ? '' : 'hidden') + ' md:flex'
-            }>
+              "flex items-center " +
+              (currentPageTitle === "Chat" ? "" : "hidden") +
+              " md:flex"
+            }
+          >
             <SlidersHorizontal />
           </DrawerTrigger>
           <DrawerContent className="dark:bg-dark">
@@ -72,13 +78,18 @@ export default function HeaderTitle() {
         <Dialog>
           <DialogTrigger
             className={
-              'flex items-center ' + (currentPageTitle === 'Chat' ? '' : 'hidden') + ' md:flex'
-            }>
+              "flex items-center " +
+              (currentPageTitle === "Chat" ? "" : "hidden") +
+              " md:flex"
+            }
+          >
             <SlidersHorizontal />
           </DialogTrigger>
           <DialogContent className="dark:bg-dark">
             <DialogHeader>
-              <DialogTitle className="text-3xl text-center">Filters</DialogTitle>
+              <DialogTitle className="text-3xl text-center">
+                Filters
+              </DialogTitle>
               <DialogDescription>
                 <FilterForm />
               </DialogDescription>
