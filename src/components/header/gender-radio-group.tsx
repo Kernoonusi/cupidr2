@@ -70,4 +70,23 @@ export function GenderRadioGroup({
       </label>
     </>
   );
+      <label
+        htmlFor={`genderBoth`}
+        className="flex items-center px-4 py-2 bg-white border-0 rounded-r-md shadow-sm cursor-pointer group hover:bg-secondary has-[:checked]:bg-secondary"
+      >
+        <input
+          type="radio"
+          {...field}
+          id={`genderBoth`}
+          name="gender"
+          value={Gender.both}
+          checked={field.value === Gender.both}
+          className="sr-only peer"
+        />
+        <span className="text-lg font-medium text-gray-700 capitalize peer-checked:text-white group-hover:text-white">
+          Both
+        </span>
+      </label>
+    </>
+  );
 }

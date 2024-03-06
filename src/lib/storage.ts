@@ -1,4 +1,4 @@
-import { Dropbox } from 'dropbox';
+import { Dropbox } from "dropbox";
 
 const accessToken = process.env.DROPBOX_ACCESS_TOKEN;
 
@@ -10,7 +10,7 @@ const dbx = new Dropbox({
 export default dbx;
 
 export const uploadFile = async (file: File) => {
-  const extension = file.name.split('.').pop();
+  const extension = file.name.split(".").pop();
   const response = await dbx.filesUpload({
     path: `/${Date.now()}.${extension}`,
     contents: file,
@@ -31,10 +31,10 @@ export const getSharedLink = async (file_path: string) => {
     const sharedLinkResponse = await dbx.sharingCreateSharedLinkWithSettings({
       path: file_path,
     });
-    const url = sharedLinkResponse.result.url.replace('dl=0', 'raw=1');
+    const url = sharedLinkResponse.result.url.replace("dl=0", "raw=1");
     return url;
   } catch (error) {
-    console.error('Error creating shared link:', error);
+    console.error("Error creating shared link:", error);
   }
 };
 

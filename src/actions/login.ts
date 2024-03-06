@@ -1,20 +1,23 @@
-'use server';
+"use server";
 
-import * as z from 'zod';
-import { AuthError } from 'next-auth';
+import * as z from "zod";
+import { AuthError } from "next-auth";
 
-import { LoginSchema } from '@/schemas';
-import { signIn } from '@/auth';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
-import { getUserByEmail } from '@/data/user';
-import { generateVerificationToken } from '@/lib/tokens';
-import { sendVerificationEmail } from '@/lib/mail';
+import { LoginSchema } from "@/schemas";
+import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
-export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: string) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl?: string,
+) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields' };
+    return { error: "Invalid fields" };
   }
 
   const { email, password } = validatedFields.data;
@@ -22,19 +25,21 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.password || !existingUser.email) {
-    return { error: 'Invalid credentials' };
+    return { error: "Invalid credentials" };
   }
 
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(existingUser.email);
+    const verificationToken = await generateVerificationToken(
+      existingUser.email,
+    );
 
     await sendVerificationEmail(existingUser.email, verificationToken.token);
 
-    return { success: 'Confirmation email sent!' };
+    return { success: "Confirmation email sent!" };
   }
 
   try {
-    await signIn('credentials', {
+    await signIn("credentials", {
       email,
       password,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
@@ -42,10 +47,10 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: 'Invalid credentials' };
+        case "CredentialsSignin":
+          return { error: "Invalid credentials" };
         default:
-          return { error: 'An error occurred' };
+          return { error: "An error occurred" };
       }
     }
 

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { LogOut, User, Settings, ChevronDown, Palette } from 'lucide-react';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
+import { LogOut, User, Settings, ChevronDown, Palette } from "lucide-react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 import {
   DropdownMenu,
@@ -10,10 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { ThemeSelect } from '@/components/theme-select';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { ThemeSelect } from "@/components/theme-select";
 
 export const UserButton = () => {
   const user = useCurrentUser();
@@ -22,7 +22,7 @@ export const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center space-x-2">
         <Avatar>
-          <AvatarImage src={user?.image || ''} alt="User avatar" />
+          <AvatarImage src={user?.image || ""} alt="User avatar" />
           <AvatarFallback className="bg-emerald-500">
             <User className="text-white" />
           </AvatarFallback>
@@ -33,7 +33,7 @@ export const UserButton = () => {
         <DropdownMenuLabel>
           <div className="flex justify-center items-center space-x-2">
             <Avatar>
-              <AvatarImage src={user?.image || ''} alt="User avatar" />
+              <AvatarImage src={user?.image || ""} alt="User avatar" />
               <AvatarFallback className="bg-emerald-500">
                 <User className="text-white" />
               </AvatarFallback>
@@ -60,7 +60,10 @@ export const UserButton = () => {
           </div>
           <ThemeSelect />
         </DropdownMenuLabel>
-        <DropdownMenuItem className="cursor-pointer bg-destructive/15" onClick={() => signOut()}>
+        <DropdownMenuItem
+          className="cursor-pointer bg-destructive/15"
+          onClick={() => signOut()}
+        >
           <LogOut className="w-4 h-4 mr-2 text-destructive" />
           Logout
         </DropdownMenuItem>

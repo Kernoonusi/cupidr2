@@ -1,11 +1,17 @@
 import { auth } from "@/auth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AboutYou from "@/components/account/about-you";
 import PhotosGallery from "@/components/account/photos-gallery";
 
 export default async function Account() {
-	const session = await auth();
+  const session = await auth();
 
 	return (
 		<main className="max-w-7xl justify-center mx-auto px-4 flex flex-col items-center gap-4">
