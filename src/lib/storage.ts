@@ -1,9 +1,13 @@
 import { Dropbox } from "dropbox";
 
-const accessToken = process.env.DROPBOX_ACCESS_TOKEN;
+const refreshToken = process.env.DBX_REFRESH_TOKEN;
+const clientId = process.env.DBX_APP_KEY;
+const clientSecret = process.env.DBX_APP_SECRET;
 
 const dbx = new Dropbox({
-  accessToken,
+  refreshToken,
+  clientId,
+  clientSecret,
   fetch,
 });
 
