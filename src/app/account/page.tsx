@@ -1,3 +1,4 @@
+"use client";
 import { auth } from "@/auth";
 import {
   Card,
@@ -9,20 +10,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AboutYou from "@/components/account/about-you";
 import PhotosGallery from "@/components/account/photos-gallery";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
-export default async function Account() {
-  const session = await auth();
+export default function Account() {
+  const user = useCurrentUser();
 
   return (
     <main className="max-w-7xl justify-center mx-auto px-4 flex flex-col items-center gap-4">
       <Avatar className="mt-6 w-32 h-32">
-        <AvatarImage src={session?.user?.image || ""} alt="@shadcn" />
+        <AvatarImage src={user?.image || ""} alt="@shadcn" />
         <AvatarFallback>
-          {session?.user?.name ? session?.user?.name[0] : ""}
+          {user?.name ? user?.name[0] : ""}
         </AvatarFallback>
       </Avatar>
       <h1 className="text-2xl font-bold text-center">
-        {session?.user?.name}, 18
+        {user?.name}, 18
       </h1>
       <Card className="w-full mt-16 dark:bg-dark">
         <CardHeader>

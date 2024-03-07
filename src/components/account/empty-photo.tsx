@@ -58,7 +58,7 @@ export function EmptyPhoto({i = 0}: {i: number}) {
   return (
     <div
       key={`empty-photo-${i}`}
-      className="flex aspect-[3/4] rounded-lg justify-center items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:w-[340px] md:h-[640px]"
+      className="flex aspect-[3/4] rounded-lg justify-center items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:min-w-[340px] md:min-h-[640px] md:aspect-auto"
     >
       <button type="button" className="flex flex-col">
         <p className="sr-only">upload photo</p>

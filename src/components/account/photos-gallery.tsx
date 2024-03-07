@@ -1,8 +1,9 @@
+"use client";
 import Image from "next/image";
 
 import { EmptyPhoto } from "./empty-photo";
 import { DeletePhoto } from "./delete-photo";
-import { currentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const photo = [
   "/userPhotos/1.png",
@@ -13,12 +14,12 @@ const photo = [
   // "/userPhotos/6.png",
 ];
 
-export default async function PhotosGallery() {
-  const user = await currentUser();
+export default function PhotosGallery() {
+  const user = useCurrentUser();
 
   const emptyPhotos = [];
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 6 - (user?.images.length || 0); i++) {
     emptyPhotos.push(<EmptyPhoto i={i} />);
   }
 
@@ -32,7 +33,7 @@ export default async function PhotosGallery() {
             <Image
               src={image.url}
               alt="user photos"
-              className="object-cover rounded-lg"
+              className="object-cover h-full w-full rounded-lg"
               width={360}
               height={640}
             />
