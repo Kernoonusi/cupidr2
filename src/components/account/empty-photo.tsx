@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { MutableRefObject, useRef, useState, useTransition } from "react";
 import { useSession } from "next-auth/react";
-import { Plus } from "lucide-react";
+import { AlertTriangle, Check, Loader2, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export function EmptyPhoto({i = 0}: {i: number}) {
+export function EmptyPhoto({ i = 0 }: { i: number }) {
   const user = useCurrentUser();
   const { update } = useSession();
   const [error, setError] = useState<string | undefined>();
@@ -32,7 +32,7 @@ export function EmptyPhoto({i = 0}: {i: number}) {
     resolver: zodResolver(UploadSchema),
   });
 
-  const formRef:MutableRefObject<HTMLFormElement | null> = useRef(null);
+  const formRef: MutableRefObject<HTMLFormElement | null> = useRef(null);
 
   const onSubmit = (values: z.infer<typeof UploadSchema>) => {
     form.reset();
@@ -48,17 +48,18 @@ export function EmptyPhoto({i = 0}: {i: number}) {
           setError(undefined);
           update();
         }
-        if (data.error) {
+        if (data.error ) {
           setError(data.error);
           setSuccess(undefined);
         }
       });
     });
   };
+
   return (
     <div
       key={`empty-photo-${i}`}
-      className="flex aspect-[3/4] rounded-lg justify-center items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:min-w-[340px] md:min-h-[640px] md:aspect-auto"
+      className="flex min-h-28 rounded-lg justify-center items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:min-w-[340px] md:min-h-[640px] md:aspect-auto"
     >
       <button type="button" className="flex flex-col">
         <p className="sr-only">upload photo</p>
@@ -77,22 +78,36 @@ export function EmptyPhoto({i = 0}: {i: number}) {
                 const images = form.watch("images");
 
                 return (
-                  <FormItem>
+                  <FormItem className="flex flex-col justify-center items-center">
                     {/* File Upload */}
                     <FormControl>
                       <div>
                         <label htmlFor="images">
-                          <Plus
-                            size={48}
-                            className="transition cursor-pointer hover:scale-125"
-                          />
+                          {isPending ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : success ? (
+                            <Check
+                              size={48}
+                              className="transition text-secondary"
+                            />
+                          ) : error ? (
+                            <AlertTriangle
+                              size={48}
+                              className="transition text-primary"
+                            />
+                          ) : (
+                            <Plus
+                              size={48}
+                              className="transition cursor-pointer hover:scale-125"
+                            />
+                          )}
                         </label>
                         <Input
                           type="file"
                           accept="image/*"
                           multiple={true}
                           disabled={form.formState.isSubmitting}
-                          className="sr-only"
+                          className="hidden"
                           id="images"
                           {...rest}
                           onChange={(event) => {
@@ -126,9 +141,6 @@ export function EmptyPhoto({i = 0}: {i: number}) {
                 );
               }}
             />
-
-            <FormError message={error} />
-            <FormSuccess message={success} />
           </form>
         </Form>
       </button>

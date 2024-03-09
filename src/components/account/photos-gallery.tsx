@@ -1,25 +1,16 @@
 "use client";
 import Image from "next/image";
 
-import { EmptyPhoto } from "./empty-photo";
-import { DeletePhoto } from "./delete-photo";
+import { EmptyPhoto } from "@/components/account/empty-photo";
+import { DeletePhoto } from "@/components/account/delete-photo";
 import { useCurrentUser } from "@/hooks/use-current-user";
-
-const photo = [
-  "/userPhotos/1.png",
-  "/userPhotos/2.png",
-  "/userPhotos/3.png",
-  "/userPhotos/4.png",
-  "/userPhotos/5.png",
-  // "/userPhotos/6.png",
-];
 
 export default function PhotosGallery() {
   const user = useCurrentUser();
 
   const emptyPhotos = [];
 
-  for (let i = 0; i < 6 - (user?.images.length || 0); i++) {
+  for (let i = 0; i < 6 - ((user?.images && user.images.length) || 3); i++) {
     emptyPhotos.push(<EmptyPhoto i={i} />);
   }
 
@@ -27,19 +18,19 @@ export default function PhotosGallery() {
     <div className={`grid grid-cols-3 gap-4`}>
       {user &&
         user.images &&
-        user.images.map((image, index) => (
-          <div key={index} className="relative">
+        user.images.map((image) => (
+          <div key={image.url} className="relative">
             <DeletePhoto path={image.path} />
             <Image
               src={image.url}
               alt="user photos"
-              className="object-cover h-full w-full rounded-lg"
+              className="object-cover h-full w-full aspect-[3/4] rounded-lg"
               width={360}
               height={640}
             />
           </div>
         ))}
-      {photo.length < 6 && emptyPhotos}
+      {user && ((user.images && user.images.length < 6) || !user?.images) && emptyPhotos}
     </div>
   );
 }

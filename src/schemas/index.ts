@@ -106,6 +106,7 @@ export const PreferencesSchema = z.object({
 });
 
 export const ProfileSchema = z.object({
+  id: z.string(),
   description: z.string().max(250, {
     message: "Maximum 250 characters allowed",
   }),

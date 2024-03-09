@@ -28,7 +28,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  birthday      DateTime? @db.Date
+  age           Int?
   gender        Gender?
   bio           String?
   geolocation   String?

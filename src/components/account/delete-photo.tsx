@@ -13,7 +13,7 @@ export function DeletePhoto({ path }: { path: string }) {
   return (
     <button
       type="button"
-      className="absolute top-2 right-2"
+      className="absolute top-1 right-1 md:top-2 md:right-2"
       onClick={() => onClick(path)}
     >
       <p className="sr-only">delete photo</p>
