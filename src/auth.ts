@@ -23,6 +23,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role: UserRole;
     isOAuth: boolean;
+    image: string | null;
     images: {
       url: string;
       path: string;
@@ -79,6 +80,7 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth;
+        session.user.image = token.image;
         session.user.images = token.images;
       }
 
@@ -100,6 +102,7 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
+      token.image = existingUser.image;
       token.images = existingUser.images.map((image) => {
         return {
           url: image.url,
