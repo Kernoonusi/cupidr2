@@ -16,7 +16,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
   Form,
 } from "@/components/ui/form";
@@ -27,20 +26,24 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Cities } from "@/constants";
 import { ProfileSchema } from "@/schemas";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function AboutYou() {
+  const user = useCurrentUser();
   const cities = Object.entries(Cities);
+
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      description: "",
-      gender: Gender.male,
-      location: Cities.chelyabinsk,
-      age: 18,
+      bio: user?.bio || undefined,
+      gender: user?.gender || Gender.male,
+      location: (user?.location as Cities) || undefined,
+      age: user?.age || undefined,
     },
   });
-  const onSubmit: SubmitHandler<z.infer<typeof ProfileSchema>> = (data) => {
-    console.log(data);
+
+  const onSubmit = (values: z.infer<typeof ProfileSchema>) => {
+    console.log(values);
   };
 
   return (
@@ -48,10 +51,10 @@ export default function AboutYou() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
         <FormField
           control={form.control}
-          name="description"
+          name="bio"
           render={({ field }) => (
             <FormItem className="flex gap-4 items-center">
-              <FormLabel className="w-20">Description</FormLabel>
+              <FormLabel className="w-20">Bio</FormLabel>
               <FormControl>
                 <Textarea className="resize-none" {...field} />
               </FormControl>
@@ -126,7 +129,13 @@ export default function AboutYou() {
             <FormItem className="flex gap-4 items-center ">
               <FormLabel className="w-20">Age</FormLabel>
               <FormControl>
-                <Input type="number" min={18} max={99} {...field} />
+                <Input
+                  placeholder="Min age is 18"
+                  type="number"
+                  min={18}
+                  max={99}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

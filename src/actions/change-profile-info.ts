@@ -14,17 +14,14 @@ export const changeProfileInfo = async (
     return { error: "Invalid fields" };
   }
 
-  const { id, description, gender, location, age } = validatedFields.data;
+  const { id, ...rest } = validatedFields.data;
 
   await db.user.update({
     where: {
       id,
     },
     data: {
-      bio: description,
-      gender,
-      geolocation: location,
-      age,
+      ...rest,
     },
   });
 

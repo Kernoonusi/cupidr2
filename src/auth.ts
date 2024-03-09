@@ -1,5 +1,5 @@
 import "next-auth/jwt";
-import { UserRole } from "@prisma/client";
+import { Gender, UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
@@ -12,6 +12,10 @@ declare module "next-auth" {
   interface User {
     role: UserRole;
     isOAuth: boolean;
+    age: number | null;
+    bio: string | null;
+    location: string | null;
+    gender: Gender | null;
     images: {
       url: string;
       path: string;
@@ -24,6 +28,10 @@ declare module "next-auth/jwt" {
     role: UserRole;
     isOAuth: boolean;
     image: string | null;
+    age: number | null;
+    bio: string | null;
+    location: string | null;
+    gender: Gender | null;
     images: {
       url: string;
       path: string;
@@ -80,13 +88,17 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth;
+        session.user.age = token.age;
+        session.user.bio = token.bio;
+        session.user.location = token.location;
+        session.user.gender = token.gender;
         session.user.image = token.image;
         session.user.images = token.images;
       }
 
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token }) {
       if (!token.sub) return token;
 
       const existingUser = await getUserById(token.sub);
@@ -103,6 +115,10 @@ export const {
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.image = existingUser.image;
+      token.age = existingUser.age;
+      token.bio = existingUser.bio;
+      token.location = existingUser.location;
+      token.gender = existingUser.gender;
       token.images = existingUser.images.map((image) => {
         return {
           url: image.url,

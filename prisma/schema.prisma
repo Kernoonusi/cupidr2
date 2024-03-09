@@ -15,6 +15,11 @@ enum UserRole {
 enum Gender {
   male
   female
+}
+
+enum GenderPreference {
+  male
+  female
   both
 }
 
@@ -31,7 +36,7 @@ model User {
   age           Int?
   gender        Gender?
   bio           String?
-  geolocation   String?
+  location      String?
   image         String?
   password      String?
   role          UserRole  @default(USER)
@@ -86,7 +91,7 @@ model PasswordResetToken {
 model Preferences {
   id     String @id @default(cuid())
   userId String @unique
-  gender Gender
+  gender GenderPreference
   minAge Int    @db.Int2
   maxAge Int    @db.Int2
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
