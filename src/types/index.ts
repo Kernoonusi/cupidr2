@@ -1,5 +1,3 @@
-import { Gender } from "@prisma/client";
-
 export interface User {
   id: number;
   name: string;
@@ -7,9 +5,4 @@ export interface User {
   age: number;
   location: string;
   description: string;
-}
-
-export interface IFilterInput {
-  gender: Gender;
-  agePref: number[];
 }

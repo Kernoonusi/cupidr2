@@ -1,39 +1,36 @@
 "use client";
-
-import { Plus, XCircle } from "lucide-react";
 import Image from "next/image";
 
-const photo = [
-	"/userPhotos/1.png",
-	"/userPhotos/2.png",
-	"/userPhotos/3.png",
-	"/userPhotos/4.png",
-	"/userPhotos/5.png",
-	// "/userPhotos/6.png",
-];
+import { EmptyPhoto } from "@/components/account/empty-photo";
+import { DeletePhoto } from "@/components/account/delete-photo";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
 export default function PhotosGallery() {
-	return (
-		<>
-			{photo.map((photo, index) => (
-				<div key={index} className="relative">
-                    <button type="button" className="absolute top-2 right-2"><p className="sr-only">delete photo</p><XCircle size={30} /></button>
-					<Image
-						src={photo}
-						alt="user photos"
-						className=" object-cover rounded-lg"
-						width={360}
-						height={640}
-					/>
-				</div>
-			))}
-			{photo.length < 6 && (
-				<div className="flex w-full h-full rounded-lg justify-center items-center bg-slate-100 dark:bg-slate-800">
-					<button type="button" className="flex flex-col">
-						<p className="sr-only">Add photo</p>
-						<Plus size={48} />
-					</button>
-				</div>
-			)}
-		</>
-	);
+  const user = useCurrentUser();
+
+  const emptyPhotos = [];
+
+  for (let i = 0; i < 6 - ((user?.images && user.images.length) || 3); i++) {
+    emptyPhotos.push(<EmptyPhoto i={i} />);
+  }
+
+  return (
+    <div className={`grid grid-cols-3 gap-4`}>
+      {user &&
+        user.images &&
+        user.images.map((image) => (
+          <div key={image.url} className="relative">
+            <DeletePhoto path={image.path} />
+            <Image
+              src={image.url}
+              alt="user photos"
+              className="object-cover h-full w-full aspect-[3/4] rounded-lg"
+              width={360}
+              height={640}
+            />
+          </div>
+        ))}
+      {user && ((user.images && user.images.length < 6) || !user?.images) && emptyPhotos}
+    </div>
+  );
 }

@@ -8,7 +8,7 @@ export const upload = async (formData: FormData) => {
   const user = await currentUser();
 
   const formImages = formData.getAll("image") as File[];
-
+  
   if (user && user?.images.length + formImages.length > 5) {
     return { error: "You can only upload 5 images" };
   }

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Gender } from "@prisma/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,13 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Slider2thumb } from "@/components/ui/slider2thumb";
-import GenderRadioGroup from "@/components/header/gender-radio-group";
-import { IFilterInput } from "@/types/index";
+import { GenderRadioGroup } from "@/components/header/gender-radio-group";
+import { PreferencesSchema } from "@/schemas";
 
-export default function FilterForm() {
+export function PreferencesForm() {
   const [agePref, setAgePref] = useState([18, 50]);
 
-  const form = useForm<IFilterInput>({
+  const form = useForm<z.infer<typeof PreferencesSchema>>({
+    resolver: zodResolver(PreferencesSchema),
     defaultValues: {
       gender: Gender.male,
       agePref,
@@ -30,7 +33,7 @@ export default function FilterForm() {
     setAgePref(value);
   };
 
-  const onSubmit: SubmitHandler<IFilterInput> = (data) => {
+  const onSubmit: SubmitHandler<z.infer<typeof PreferencesSchema>> = (data) => {
     console.log(data);
   };
   return (

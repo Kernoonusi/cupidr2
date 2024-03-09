@@ -1,4 +1,5 @@
-import { UserRole } from "@prisma/client";
+import { Cities } from "@/constants";
+import { Gender, UserRole } from "@prisma/client";
 import * as z from "zod";
 
 // Images
@@ -88,4 +89,35 @@ export const RegisterSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required",
   }),
+});
+
+export const PreferencesSchema = z.object({
+  gender: z.enum([Gender.male, Gender.female, Gender.both], {
+    invalid_type_error: "Gender is required",
+  }),
+  agePref: z
+    .array(
+      z.number({ invalid_type_error: "Age range is required" }).min(18).max(99),
+      {
+        invalid_type_error: "Age range is required",
+      },
+    )
+    .max(2),
+});
+
+export const ProfileSchema = z.object({
+  id: z.string(),
+  description: z.string().max(250, {
+    message: "Maximum 250 characters allowed",
+  }),
+  gender: z.enum([Gender.male, Gender.female], {
+    invalid_type_error: "Gender is required",
+  }),
+  location: z.nativeEnum(Cities, {
+    invalid_type_error: "Location is required",
+  }),
+  age: z
+    .number()
+    .min(18, { message: "You must be at least 18 years old" })
+    .max(99, { message: "You must be at most 99 years old" }),
 });

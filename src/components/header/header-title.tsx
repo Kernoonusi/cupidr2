@@ -1,5 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { SlidersHorizontal } from "lucide-react";
 
 import LinkButton from "@/components/header/link-button";
 import {
@@ -22,18 +23,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import FilterForm from "@/components/header/filter-form";
-import { UserButton } from "../auth/user-button";
-import { SlidersHorizontal } from "lucide-react";
+import { PreferencesForm } from "@/components/header/filter-form";
+import { UserButton } from "@/components/auth/user-button";
 
 const titles: Map<string, string> = new Map([
   ["/", "Cupidr"],
   ["chat", "Chat"],
   ["account", "Account"],
   ["settings", "Settings"],
+  ["/", "Cupidr"],
+  ["chat", "Chat"],
+  ["account", "Account"],
+  ["settings", "Settings"],
 ]);
 
-export default function HeaderTitle() {
+export function HeaderTitle() {
   const pathname = usePathname()?.split("/")[1];
   const currentPageTitle = titles.get(pathname || "/") || "Cupidr";
   const { sm } = useMediaQueries();
@@ -44,14 +48,20 @@ export default function HeaderTitle() {
       <h1 className="text-3xl font-bold md:hidden">{currentPageTitle}</h1>
       <div
         className={`flex items-center 
-					${currentPageTitle === "Account" || currentPageTitle === "Settings" ? "" : "hidden"} md:flex`}
+					${
+            currentPageTitle === "Account" || currentPageTitle === "Settings"
+              ? ""
+              : "hidden"
+          } md:flex`}
       >
         <UserButton />
       </div>
       {user && !sm && (
         <Drawer>
           <DrawerTrigger
-            className={`flex items-center ${currentPageTitle === "Chat" ? "" : "hidden"} md:flex`}
+            className={`flex items-center ${
+              currentPageTitle === "Chat" ? "" : "hidden"
+            } md:flex`}
           >
             <SlidersHorizontal />
           </DrawerTrigger>
@@ -59,14 +69,16 @@ export default function HeaderTitle() {
             <DrawerHeader>
               <DrawerTitle className="text-3xl">Filters</DrawerTitle>
             </DrawerHeader>
-            <FilterForm />
+            <PreferencesForm />
           </DrawerContent>
         </Drawer>
       )}
       {user && sm && (
         <Dialog>
           <DialogTrigger
-            className={`flex items-center ${currentPageTitle === "Chat" ? "" : "hidden"} md:flex`}
+            className={`flex items-center ${
+              currentPageTitle === "Chat" ? "" : "hidden"
+            } md:flex`}
           >
             <SlidersHorizontal />
           </DialogTrigger>
@@ -76,7 +88,7 @@ export default function HeaderTitle() {
                 Filters
               </DialogTitle>
               <DialogDescription>
-                <FilterForm />
+                <PreferencesForm />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
