@@ -6,9 +6,15 @@ import { db } from "@/lib/db";
 export const setAvatar = async (url: string) => {
   const user = await currentUser();
 
-  if (!user?.images.some((image) => image.url === url)) return;
+  const userHasImage = user?.images.some((image) => image.url === url);
 
-  if (!user.id) {
+  if (!userHasImage) {
+    return {
+      error: "You do not have permission to set this image as your avatar",
+    };
+  }
+
+  if (!user || !user.id) {
     return { error: "User not found" };
   }
 
