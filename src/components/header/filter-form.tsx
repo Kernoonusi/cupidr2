@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Gender } from "@prisma/client";
+import { GenderPreference } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -24,7 +24,7 @@ export function PreferencesForm() {
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
-      gender: Gender.male,
+      gender: GenderPreference.male,
       agePref,
     },
   });

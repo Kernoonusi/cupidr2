@@ -1,19 +1,12 @@
+"use client";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 const chats = [
   {
     id: 1,
-    name: "John",
+    name: "Pavel",
     message: "Hi, how are you?",
   },
   {
@@ -23,19 +16,19 @@ const chats = [
   },
   {
     id: 3,
-    name: "John",
+    name: "Armen",
     message: "What about you?",
   },
 ];
 
 export default function Chat() {
   return (
-    <main className="w-full mx-auto mt-4 md:max-w-7xl">
+    <div>
       {chats.map((chat) => (
         <Link
           key={chat.id}
-          href="/chat/1"
-          className="grid grid-cols-[auto_1fr] grid-rows-2 px-4 py-2 gap-1 gap-x-6 items-center hover:bg-gray-100 dark:hover:bg-dark lg:rounded-lg"
+          href={`/chat/1`}
+          className="grid grid-cols-[auto_1fr] grid-rows-2 px-4 py-2 gap-1 gap-x-6 items-center hover:bg-gray-100 dark:hover:bg-zinc-700 lg:rounded-lg"
         >
           <Avatar className="grid row-span-2">
             <AvatarImage src="https://github.com/shadcn.png" />
@@ -45,6 +38,6 @@ export default function Chat() {
           <p>{chat.message}</p>
         </Link>
       ))}
-    </main>
+    </div>
   );
 }

@@ -1,14 +1,14 @@
 "use client";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { SendHorizontal } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SendHorizontal } from "lucide-react";
 
-const deafaultChatMessages = [
+const defaultChatMessages = [
   {
     id: 1,
     name: "John",
@@ -103,8 +103,8 @@ const userName = "John";
 const userName2 = "Jane";
 let socket;
 
-export default function Chat() {
-  const [chatMessages, setChatMessages] = useState(deafaultChatMessages);
+export default function ChatField({ params }: { params: { chatId: string } }) {
+  const [chatMessages, setChatMessages] = useState(defaultChatMessages);
   const [someoneTyping, setSomeoneTyping] = useState(false);
   const messagesEndRef = useRef<null | HTMLSpanElement>(null);
   const form = useForm({

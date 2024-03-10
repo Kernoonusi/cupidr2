@@ -1,13 +1,13 @@
 import React from "react";
 import { ControllerRenderProps } from "react-hook-form";
-import { Gender } from "@prisma/client";
+import { GenderPreference } from "@prisma/client";
 
 export function GenderRadioGroup({
   field,
 }: {
   field: ControllerRenderProps<
     {
-      gender: "male" | "female" | "both";
+      gender: GenderPreference;
       agePref: number[];
     },
     "gender"
@@ -24,8 +24,8 @@ export function GenderRadioGroup({
           {...field}
           id={`genderMale`}
           name="gender"
-          value={Gender.male}
-          checked={field.value === Gender.male}
+          value={GenderPreference.male}
+          checked={field.value === GenderPreference.male}
           className="sr-only peer"
         />
         <span className="text-lg font-medium text-gray-700 capitalize peer-checked:text-white group-hover:text-white">
@@ -42,8 +42,8 @@ export function GenderRadioGroup({
           {...field}
           id={`genderFemale`}
           name="gender"
-          value={Gender.female}
-          checked={field.value === Gender.female}
+          value={GenderPreference.female}
+          checked={field.value === GenderPreference.female}
           className="sr-only peer"
         />
         <span className="text-lg font-medium text-gray-700 capitalize peer-checked:text-white group-hover:text-white">
@@ -60,8 +60,8 @@ export function GenderRadioGroup({
           {...field}
           id={`genderBoth`}
           name="gender"
-          value={Gender.both}
-          checked={field.value === Gender.both}
+          value={GenderPreference.both}
+          checked={field.value === GenderPreference.both}
           className="sr-only peer"
         />
         <span className="text-lg font-medium text-gray-700 capitalize peer-checked:text-white group-hover:text-white">
