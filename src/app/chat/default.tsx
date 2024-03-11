@@ -1,8 +1,7 @@
-"use client";
+import { ChatList } from "@/components/chat/chat-list";
+
 export default function Default() {
     return (
-        <div>
-            <h1>Default</h1>
-        </div>
+       <ChatList/>
     );
 }
