@@ -22,17 +22,23 @@ export function AccountAvatar({ user }: { user: User | undefined }) {
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
 
-  const changeAvatar = async (url: string) => {
+  const changeAvatar = (url: string) => {
     startTransition(() => {
       setAvatar(url).then((data) => {
         if (data?.success) {
           setSuccess(data.success);
           setError(undefined);
           update();
+          setTimeout(() => {
+            setSuccess(undefined);
+          }, 3000);
         }
         if (data?.error) {
           setError(data.error);
           setSuccess(undefined);
+          setTimeout(() => {
+            setError(undefined);
+          }, 3000);
         }
       });
     });

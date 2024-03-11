@@ -1,14 +1,14 @@
 "use client";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { SendHorizontal } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SendHorizontal } from "lucide-react";
 
-const deafaultChatMessages = [
+const defaultChatMessages = [
   {
     id: 1,
     name: "John",
@@ -103,8 +103,8 @@ const userName = "John";
 const userName2 = "Jane";
 let socket;
 
-export default function Chat() {
-  const [chatMessages, setChatMessages] = useState(deafaultChatMessages);
+export default function ChatField({ params }: { params: { chatId: string } }) {
+  const [chatMessages, setChatMessages] = useState(defaultChatMessages);
   const [someoneTyping, setSomeoneTyping] = useState(false);
   const messagesEndRef = useRef<null | HTMLSpanElement>(null);
   const form = useForm({
@@ -158,24 +158,23 @@ export default function Chat() {
   // 	});
   // };
   return (
-    <>
-      <main className="max-w-7xl mx-auto px-4 overflow-y-scroll flex flex-col justify-end ">
-        {chatMessages.map((message) => (
-          <div
-            key={message.id}
-            className="grid grid-cols-[auto_1fr_auto] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
-          >
-            <Avatar className="grid row-span-2">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>{message.name.split("")[0]}</AvatarFallback>
-            </Avatar>
-            <h2 className="text-lg font-bold">{message.name}</h2>
-            <small>{message.time}</small>
-            <p>{message.message}</p>
-          </div>
-        ))}
-        <span ref={messagesEndRef}></span>
-      </main>
+    <main className="max-w-7xl w-full px-4 overflow-y-auto flex flex-col justify-end ">
+      {chatMessages.map((message) => (
+        <div
+          key={message.id}
+          className="grid grid-cols-[auto_1fr_auto] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
+        >
+          <Avatar className="grid row-span-2">
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>{message.name.split("")[0]}</AvatarFallback>
+          </Avatar>
+          <h2 className="text-lg font-bold">{message.name}</h2>
+          <small>{message.time}</small>
+          <p>{message.message}</p>
+        </div>
+      ))}
+      <span ref={messagesEndRef}></span>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -213,6 +212,6 @@ export default function Chat() {
           </Button>
         </form>
       </Form>
-    </>
+    </main>
   );
 }

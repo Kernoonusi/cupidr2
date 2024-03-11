@@ -1,8 +1,10 @@
 "use client";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Gender } from "@prisma/client";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useState, useTransition } from "react";
 
 import {
   Select,
@@ -27,10 +29,16 @@ import { Input } from "@/components/ui/input";
 import { Cities } from "@/constants";
 import { ProfileSchema } from "@/schemas";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { changeProfileInfo } from "@/actions/change-profile-info";
+import { AlertTriangle, Check, Loader2 } from "lucide-react";
 
-export default function AboutYou() {
+export function AboutYou() {
   const user = useCurrentUser();
   const cities = Object.entries(Cities);
+  const { update } = useSession();
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
@@ -43,7 +51,25 @@ export default function AboutYou() {
   });
 
   const onSubmit = (values: z.infer<typeof ProfileSchema>) => {
-    console.log(values);
+    startTransition(() => {
+      changeProfileInfo(values).then((data) => {
+        if (data?.success) {
+          setSuccess(data.success);
+          setError(undefined);
+          update();
+          setTimeout(() => {
+            setSuccess(undefined);
+          }, 3000);
+        }
+        if (data?.error) {
+          setError(data.error);
+          setSuccess(undefined);
+          setTimeout(() => {
+            setError(undefined);
+          }, 3000);
+        }
+      });
+    });
   };
 
   return (
@@ -70,13 +96,16 @@ export default function AboutYou() {
               <FormLabel className="w-20">Gender</FormLabel>
               <FormControl>
                 <RadioGroup
+                  {...field}
                   defaultValue={field.value}
+                  onValueChange={field.onChange}
                   className="flex gap-4 items-center"
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem
                       {...field}
                       value={Gender.male}
+                      checked={field.value === Gender.male}
                       id="maleGender"
                     />
                     <Label htmlFor="maleGender">Male</Label>
@@ -85,6 +114,7 @@ export default function AboutYou() {
                     <RadioGroupItem
                       {...field}
                       value={Gender.female}
+                      checked={field.value === Gender.female}
                       id="femaleGender"
                     />
                     <Label htmlFor="femaleGender">Female</Label>
@@ -141,7 +171,17 @@ export default function AboutYou() {
             </FormItem>
           )}
         />
-        <Button type="submit">Apply</Button>
+        <Button type="submit">
+          {isPending ? (
+            <Loader2 size={24} />
+          ) : success ? (
+            <Check size={24} className="transition text-secondary" />
+          ) : error ? (
+            <AlertTriangle size={24} className="transition text-primary" />
+          ) : (
+            "Apply"
+          )}
+        </Button>
       </form>
     </Form>
   );

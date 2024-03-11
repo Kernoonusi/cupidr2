@@ -7,22 +7,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { UploadSchema } from "@/schemas";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { upload } from "@/actions/upload";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 export function EmptyPhoto({ i = 0 }: { i: number }) {
-  const user = useCurrentUser();
   const { update } = useSession();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -43,14 +38,20 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
 
     startTransition(() => {
       upload(formData).then((data) => {
-        if (data.success) {
+        if (data?.success) {
           setSuccess(data.success);
           setError(undefined);
           update();
+          setTimeout(() => {
+            setSuccess(undefined);
+          }, 3000);
         }
-        if (data.error ) {
+        if (data?.error) {
           setError(data.error);
           setSuccess(undefined);
+          setTimeout(() => {
+            setError(undefined);
+          }, 3000);
         }
       });
     });
@@ -59,7 +60,7 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
   return (
     <div
       key={`empty-photo-${i}`}
-      className="flex min-h-28 rounded-lg justify-center items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:min-w-[340px] md:min-h-[640px] md:aspect-auto"
+      className="flex min-w-[100px] w-full rounded-lg justify-center aspect-[3/4] items-center bg-slate-100 border border-dashed dark:bg-slate-800 md:min-w-[200px] lg:min-w-[300px]"
     >
       <button type="button" className="flex flex-col">
         <p className="sr-only">upload photo</p>
@@ -81,10 +82,10 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
                   <FormItem className="flex flex-col justify-center items-center">
                     {/* File Upload */}
                     <FormControl>
-                      <div>
+                      <div className="grow">
                         <label htmlFor="images">
                           {isPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 size={48} />
                           ) : success ? (
                             <Check
                               size={48}
