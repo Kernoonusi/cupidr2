@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GenderPreference } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,15 +17,21 @@ import {
 import { Slider2thumb } from "@/components/ui/slider2thumb";
 import { GenderRadioGroup } from "@/components/header/gender-radio-group";
 import { PreferencesSchema } from "@/schemas";
+import { setPreferences } from "@/actions/set-preferences";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function PreferencesForm() {
-  const [agePref, setAgePref] = useState([18, 50]);
+  const user = useCurrentUser();
+  const [isPending, startTransition] = useTransition();
+  const [agePref, setAgePref] = useState(
+    [user?.preferences.minAge, user?.preferences.maxAge] || [18, 50],
+  );
 
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
-      gender: GenderPreference.male,
-      agePref,
+      gender: user?.preferences.gender || GenderPreference.male,
+      agePref: [user?.preferences.minAge, user?.preferences.maxAge] || [18, 50],
     },
   });
 
@@ -33,8 +39,17 @@ export function PreferencesForm() {
     setAgePref(value);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof PreferencesSchema>> = (data) => {
-    console.log(data);
+  const onSubmit = (values: z.infer<typeof PreferencesSchema>) => {
+    startTransition(() => {
+      setPreferences(values).then((data) => {
+        if (data?.success) {
+          alert(data.success);
+        }
+        if (data?.error) {
+          alert(data.error);
+        }
+      });
+    });
   };
   return (
     <>
@@ -70,6 +85,7 @@ export function PreferencesForm() {
                     <FormLabel className="text-2xl">Age Range</FormLabel>
                     <p className="self-center text-center">{`${agePref[0]} - ${agePref[1]}`}</p>
                     <Slider2thumb
+                      disabled={isPending}
                       className="w-11/12 mx-auto col-span-2"
                       onValueChange={(e) => {
                         field.onChange(e), agePrefHandler(e);

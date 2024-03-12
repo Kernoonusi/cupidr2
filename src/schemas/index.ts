@@ -102,7 +102,7 @@ export const PreferencesSchema = z.object({
         invalid_type_error: "Age range is required",
       },
     )
-    .max(2),
+    .max(2)
 });
 
 export const ProfileSchema = z.object({

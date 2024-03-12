@@ -1,11 +1,11 @@
 import "next-auth/jwt";
-import { Gender, UserRole } from "@prisma/client";
+import { Gender, GenderPreference, UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { db } from "@/lib/db";
 import authConfig from "@/auth.config";
-import { getUserById } from "./data/user";
+import { getFullUserById, getUserById } from "./data/user";
 import { getAccountByUserId } from "./data/account";
 
 declare module "next-auth" {
@@ -16,6 +16,11 @@ declare module "next-auth" {
     bio: string | null;
     location: string | null;
     gender: Gender | null;
+    preferences: {
+      minAge: number;
+      maxAge: number;
+      gender: GenderPreference;
+    };
     images: {
       url: string;
       path: string;
@@ -32,6 +37,11 @@ declare module "next-auth/jwt" {
     bio: string | null;
     location: string | null;
     gender: Gender | null;
+    preferences: {
+      minAge: number;
+      maxAge: number;
+      gender: GenderPreference;
+    };
     images: {
       url: string;
       path: string;
@@ -93,6 +103,7 @@ export const {
         session.user.location = token.location;
         session.user.gender = token.gender;
         session.user.image = token.image;
+        session.user.preferences = token.preferences;
         session.user.images = token.images;
       }
 
@@ -101,7 +112,7 @@ export const {
     async jwt({ token }) {
       if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub);
+      const existingUser = await getFullUserById(token.sub);
 
       if (!existingUser) return token;
 
@@ -119,6 +130,7 @@ export const {
       token.bio = existingUser.bio;
       token.location = existingUser.location;
       token.gender = existingUser.gender;
+      token.preferences = existingUser.preferences[0];
       token.images = existingUser.images.map((image) => {
         return {
           url: image.url,

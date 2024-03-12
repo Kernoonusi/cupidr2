@@ -4,6 +4,7 @@ import { GenderPreference } from "@prisma/client";
 
 export function GenderRadioGroup({
   field,
+  disabled,
 }: {
   field: ControllerRenderProps<
     {
@@ -12,6 +13,7 @@ export function GenderRadioGroup({
     },
     "gender"
   >;
+  disabled?: boolean;
 }) {
   return (
     <>
@@ -20,6 +22,7 @@ export function GenderRadioGroup({
         className="flex items-center px-4 py-2 bg-white border-0 rounded-l-md shadow-sm cursor-pointer border-r-2 dark:border-dark group hover:bg-secondary has-[:checked]:bg-secondary"
       >
         <input
+          disabled={disabled}
           type="radio"
           {...field}
           id={`genderMale`}
@@ -38,6 +41,7 @@ export function GenderRadioGroup({
         className="flex items-center px-4 py-2 bg-white border-0 shadow-sm cursor-pointer group border-r-2 dark:border-dark hover:bg-secondary has-[:checked]:bg-secondary"
       >
         <input
+          disabled={disabled}
           type="radio"
           {...field}
           id={`genderFemale`}
@@ -56,6 +60,7 @@ export function GenderRadioGroup({
         className="flex items-center px-4 py-2 bg-white border-0 rounded-r-md shadow-sm cursor-pointer group hover:bg-secondary has-[:checked]:bg-secondary"
       >
         <input
+          disabled={disabled}
           type="radio"
           {...field}
           id={`genderBoth`}

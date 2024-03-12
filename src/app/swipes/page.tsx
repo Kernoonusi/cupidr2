@@ -14,10 +14,15 @@ import { useEffect, useState } from "react";
 import { User } from "@/types/index";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart, MapPin, X } from "lucide-react";
+import { getSwipes } from "@/actions/get-swipes";
 
 export default function Swipes() {
   const [swipes, setSwipes] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  getSwipes(5).then((data) => {
+    console.log(data);
+  });
 
   useEffect(() => {
     async function initialLoad() {
