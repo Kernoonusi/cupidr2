@@ -10,7 +10,7 @@ export function PhotosGallery() {
 
   const emptyPhotos = [];
 
-  for (let i = 0; i < 6 - ((user?.images && user.images.length) || 3); i++) {
+  for (let i = 0; i < (user?.images?.length ? 5 - user.images.length : 3); i++) {
     emptyPhotos.push(<EmptyPhoto i={i} />);
   }
 

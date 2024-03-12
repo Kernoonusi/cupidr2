@@ -1,4 +1,4 @@
-import { CircleUser, Heart, LogIn, MessageSquareMore } from "lucide-react";
+import { CircleUser, GalleryHorizontalEnd, Heart, LogIn, MessageSquareMore } from "lucide-react";
 
 import LinkButton from "@/components/header/link-button";
 import { HeaderTitle } from "@/components/header/header-title";
@@ -16,13 +16,19 @@ export default async function Header() {
           <li className="has-[:checked]:border-b">
             <LinkButton href="/swipes" passHref>
               <p className="hidden md:block font-medium">Swipes</p>
-              <Heart />
+              <GalleryHorizontalEnd />
             </LinkButton>
           </li>
           <li className="has-[:checked]:border-b">
             <LinkButton href="/chat" passHref>
               <p className="hidden md:block font-medium">Chat</p>
               <MessageSquareMore />
+            </LinkButton>
+          </li>
+          <li className="has-[:checked]:border-b">
+            <LinkButton href="/likes" passHref>
+              <p className="hidden md:block font-medium">Likes</p>
+              <Heart />
             </LinkButton>
           </li>
           {user && (

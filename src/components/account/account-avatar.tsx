@@ -78,7 +78,7 @@ export function AccountAvatar({ user }: { user: User | undefined }) {
                   >
                     <p className="sr-only">Change avatar</p>
                     {isPending ? (
-                      <Loader2 size={48} />
+                      <Loader2 size={48} className="transition animate-spin" />
                     ) : success ? (
                       <ThumbsUp
                         size={48}
