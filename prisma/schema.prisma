@@ -49,6 +49,8 @@ model User {
 
   matchPreferencesExcluder MatchPreferences[] @relation("excluder")
   matchPreferencesExcludee MatchPreferences[] @relation("excludee")
+
+  @@index([id, email])
 }
 
 model Account {
@@ -89,12 +91,12 @@ model PasswordResetToken {
 }
 
 model Preferences {
-  id     String @id @default(cuid())
-  userId String @unique
+  id     String           @id @default(cuid())
+  userId String           @unique
   gender GenderPreference
-  minAge Int    @db.Int2
-  maxAge Int    @db.Int2
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  minAge Int              @db.Int2
+  maxAge Int              @db.Int2
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Images {
@@ -137,6 +139,7 @@ model MatchPreferences {
   id         String    @id @default(cuid())
   excluderId String
   excludeeId String
+  matched    Boolean   @default(false) // Ответный match
   type       matchType
   excluder   User      @relation("excluder", fields: [excluderId], references: [id], onDelete: Cascade)
   excludee   User      @relation("excludee", fields: [excludeeId], references: [id], onDelete: Cascade)
