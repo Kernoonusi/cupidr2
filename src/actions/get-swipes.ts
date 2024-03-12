@@ -11,7 +11,8 @@ export const getSwipes = async (limit: number) => {
       return { error: "Unauthorized" };
     }
 
-    const fields = ["id", "email", "name"];
+    const fields = ["id", "email", "age", "name", "location"];
+
     const directions = ["asc", "desc"];
     const users = await db.user.findMany({
       take: limit,

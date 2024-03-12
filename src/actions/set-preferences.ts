@@ -1,9 +1,10 @@
 "use server";
 
+import * as z from "zod";
+
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { PreferencesSchema } from "@/schemas";
-import * as z from "zod";
 
 export const setPreferences = async (
   values: z.infer<typeof PreferencesSchema>,
