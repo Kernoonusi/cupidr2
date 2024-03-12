@@ -21,7 +21,7 @@ export default function Account() {
       <Card className="w-full mt-16 dark:bg-dark">
         <CardHeader>
           <CardTitle>Your photos</CardTitle>
-          <CardDescription>More is better (max is 6)</CardDescription>
+          <CardDescription>More is better (max is 5)</CardDescription>
         </CardHeader>
         <CardContent className="w-full">
           <PhotosGallery />

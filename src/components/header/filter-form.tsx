@@ -26,19 +26,25 @@ import { FormSuccess } from "@/components/form-success";
 
 export function PreferencesForm() {
   const user = useCurrentUser();
+  console.log(user?.preferences);
+
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
-  const [agePref, setAgePref] = useState(
-    [user?.preferences.minAge, user?.preferences.maxAge] || [18, 50],
-  );
+  const [agePref, setAgePref] = useState([
+    (user?.preferences && user?.preferences.minAge) || 18,
+    (user?.preferences && user?.preferences.maxAge) || 50,
+  ]);
 
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
-      gender: user?.preferences.gender || GenderPreference.male,
-      agePref: [user?.preferences.minAge, user?.preferences.maxAge] || [18, 50],
+      gender: (user?.preferences && user?.preferences.gender) || GenderPreference.male,
+      agePref: [
+        (user?.preferences && user?.preferences.minAge) || 18,
+        (user?.preferences && user?.preferences.maxAge) || 50,
+      ],
     },
   });
 

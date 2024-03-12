@@ -62,14 +62,16 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
     });
   };
   const likeSwipe = (id: string) => {
-    like(id);
-    swipes.shift();
-    loadSwipes(1);
+    startTransition(() => {
+      like(id);
+      swipes.shift();
+      loadSwipes(1);
+    });
   };
 
   return (
     <>
-      {isPending ? (
+      {!isPending ? (
         <Carousel className="bg-slate-200 rounded-3xl relative mt-4 max-w-screen-xl max-h-[80dvh] md:max-h-[85dvh]">
           <CarouselContent>
             {swipes[0].images.map((photo) => (

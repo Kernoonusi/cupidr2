@@ -10,7 +10,11 @@ export function PhotosGallery() {
 
   const emptyPhotos = [];
 
-  for (let i = 0; i < (user?.images?.length ? 5 - user.images.length : 3); i++) {
+  for (
+    let i = 0;
+    i < (user?.images?.length ? 5 - user.images.length : 3);
+    i++
+  ) {
     emptyPhotos.push(<EmptyPhoto i={i} />);
   }
 
@@ -28,7 +32,9 @@ export function PhotosGallery() {
           />
         </div>
       ))}
-      {user && ((user.images && user.images.length < 6) || !user?.images) && emptyPhotos}
+      {user &&
+        ((user.images && user.images.length < 6) || !user?.images) &&
+        emptyPhotos}
     </div>
   );
 }
