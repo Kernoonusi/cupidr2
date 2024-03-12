@@ -51,7 +51,7 @@ async function main() {
       data: {
         email: `${names[i] + i}@example.com`,
         name: `${names[i]}`,
-        password: `${bcrypt.hash(`password${i + 1}`, 10)}`,
+        password: `${await bcrypt.hash(`password${i + 1}`, 10)}`,
         age: Math.floor(Math.random() * (25 - 18 + 1)) + 18,
         gender: Math.random() < 0.5 ? Gender.male : Gender.female,
         image: "example.com",
