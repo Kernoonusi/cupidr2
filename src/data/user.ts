@@ -47,3 +47,29 @@ export const getFullUserById = async (id: string) => {
     return null;
   }
 };
+
+export const getFullUserByEmail = async (id: string) => {
+  try {
+    const user = await db.user.findUnique({
+      where: { id },
+      include: {
+        images: {
+          select: {
+            url: true,
+            path: true,
+          },
+        },
+        preferences: {
+          select: {
+            minAge: true,
+            maxAge: true,
+            gender: true,
+          },
+        },
+      },
+    });
+    return user;
+  } catch (error) {
+    return null;
+  }
+};
