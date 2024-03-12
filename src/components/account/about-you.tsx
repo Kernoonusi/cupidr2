@@ -169,7 +169,7 @@ export function AboutYou() {
         />
         <FormError message={error} />
         <FormSuccess message={success} />
-        <Button type="submit">
+        <Button type="submit" disabled={isPending}>
           {isPending ? (
             <Loader2 size={24} className="transition animate-spin" />
           ) :  (

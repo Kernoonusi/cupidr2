@@ -1,8 +1,9 @@
 "use client";
 import { useState, useTransition } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { GenderPreference } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -19,10 +20,16 @@ import { GenderRadioGroup } from "@/components/header/gender-radio-group";
 import { PreferencesSchema } from "@/schemas";
 import { setPreferences } from "@/actions/set-preferences";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { Loader2 } from "lucide-react";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 export function PreferencesForm() {
   const user = useCurrentUser();
+  const { update } = useSession();
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<string | undefined>();
   const [agePref, setAgePref] = useState(
     [user?.preferences.minAge, user?.preferences.maxAge] || [18, 50],
   );
@@ -43,10 +50,13 @@ export function PreferencesForm() {
     startTransition(() => {
       setPreferences(values).then((data) => {
         if (data?.success) {
-          alert(data.success);
+          setSuccess(data.success);
+          setError(undefined);
+          update();
         }
         if (data?.error) {
-          alert(data.error);
+          setError(data.error);
+          setSuccess(undefined);
         }
       });
     });
@@ -101,10 +111,19 @@ export function PreferencesForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-fit px-6 mx-auto">
-            Apply
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-fit px-6 mx-auto"
+          >
+            {isPending ? (
+              <Loader2 size={24} className="transition animate-spin" />
+            ) : (
+              "Apply"
+            )}
           </Button>
-          <br />
         </form>
       </Form>
     </>

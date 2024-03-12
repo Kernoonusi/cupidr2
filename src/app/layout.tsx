@@ -7,6 +7,7 @@ import Header from "@/components/header/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system">
             <Header />
             {children}
+            <Toaster />
           </ThemeProvider>
         </SessionProvider>
       </body>
