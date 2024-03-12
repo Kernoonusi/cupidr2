@@ -31,6 +31,8 @@ import { ProfileSchema } from "@/schemas";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { changeProfileInfo } from "@/actions/change-profile-info";
 import { AlertTriangle, Check, Loader2 } from "lucide-react";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 export function AboutYou() {
   const user = useCurrentUser();
@@ -57,16 +59,10 @@ export function AboutYou() {
           setSuccess(data.success);
           setError(undefined);
           update();
-          setTimeout(() => {
-            setSuccess(undefined);
-          }, 3000);
         }
         if (data?.error) {
           setError(data.error);
           setSuccess(undefined);
-          setTimeout(() => {
-            setError(undefined);
-          }, 3000);
         }
       });
     });
@@ -171,14 +167,12 @@ export function AboutYou() {
             </FormItem>
           )}
         />
-        <Button type="submit">
+        <FormError message={error} />
+        <FormSuccess message={success} />
+        <Button type="submit" disabled={isPending}>
           {isPending ? (
-            <Loader2 size={24} />
-          ) : success ? (
-            <Check size={24} className="transition text-secondary" />
-          ) : error ? (
-            <AlertTriangle size={24} className="transition text-primary" />
-          ) : (
+            <Loader2 size={24} className="transition animate-spin" />
+          ) :  (
             "Apply"
           )}
         </Button>

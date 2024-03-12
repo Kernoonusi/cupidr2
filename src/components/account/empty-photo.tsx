@@ -44,14 +44,11 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
           update();
           setTimeout(() => {
             setSuccess(undefined);
-          }, 3000);
+          }, 1500);
         }
         if (data?.error) {
           setError(data.error);
           setSuccess(undefined);
-          setTimeout(() => {
-            setError(undefined);
-          }, 3000);
         }
       });
     });
@@ -85,7 +82,10 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
                       <div className="grow">
                         <label htmlFor="images">
                           {isPending ? (
-                            <Loader2 size={48} />
+                            <Loader2
+                              size={48}
+                              className="transition animate-spin"
+                            />
                           ) : success ? (
                             <Check
                               size={48}
@@ -107,7 +107,7 @@ export function EmptyPhoto({ i = 0 }: { i: number }) {
                           type="file"
                           accept="image/*"
                           multiple={true}
-                          disabled={form.formState.isSubmitting}
+                          disabled={isPending}
                           className="hidden"
                           id="images"
                           {...rest}
