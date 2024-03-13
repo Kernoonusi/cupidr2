@@ -1,5 +1,5 @@
 "use client";
-import { Heart, MapPin, X } from "lucide-react";
+import { Frown, Heart, MapPin, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState, useTransition } from "react";
 
@@ -12,25 +12,24 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getSwipes } from "@/actions/get-swipes";
 import { useToast } from "@/components/ui/use-toast";
 import { dislike } from "@/actions/dislike";
 import { like } from "@/actions/like";
 import { User } from "@/types";
-import { SwipeSkeleton } from "./swipeSkeleton";
 
 export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const { toast } = useToast();
   const [swipes, setSwipes] = useState<User[]>(initSwipes);
+  const [images, setImages] = useState<User["images"]>(
+    swipes.flatMap((swipe) => swipe.images),
+  );
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
   const loadSwipes = (amount: number) => {
     getSwipes(amount).then((data) => {
-      console.log(data);
-
       const {
         success: successMessage,
         error: errorMessage,
@@ -41,6 +40,12 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
       setError(errorMessage);
 
       setSwipes((prevSwipes) => [...prevSwipes, ...(users || [])]);
+      if (users) {
+        setImages((prevImages) => [
+          ...prevImages,
+          ...(users?.flatMap((user) => user.images) || []),
+        ]);
+      }
     });
   };
 
@@ -57,35 +62,59 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const dislikeSwipe = (id: string) => {
     startTransition(() => {
       dislike(id);
-      swipes.shift();
-      loadSwipes(1);
+      console.log(images, swipes);
+      if (swipes.length !== 0 && images.length !== 0) {
+        swipes.shift();
+        images.shift();
+      }
+      if (swipes.length < 3) {
+        loadSwipes(3);
+      }
     });
   };
   const likeSwipe = (id: string) => {
     startTransition(() => {
       like(id);
-      swipes.shift();
-      loadSwipes(1);
+      console.log("images ", images, "swipes ", swipes);
+
+      if (swipes.length !== 0 && images.length !== 0) {
+        swipes.shift();
+        images.shift();
+      }
+      if (swipes.length < 3) {
+        loadSwipes(3);
+      }
     });
   };
 
   return (
     <>
-      {!isPending ? (
-        <Carousel className="bg-slate-200 rounded-3xl relative mt-4 max-w-screen-xl max-h-[80dvh] md:max-h-[85dvh]">
+      {swipes.length > 0 ? (
+        <Carousel className="bg-slate-200 rounded-3xl relative mt-4 max-w-screen-xl md:max-w-[65dvw] max-h-[80dvh] md:max-h-[85dvh]">
           <CarouselContent>
             {swipes[0].images.map((photo) => (
               <CarouselItem className="overflow-hidden" key={photo.id}>
                 <Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
                   <CardContent className="p-0 relative rounded-3xl border-0">
-                    <Image
-                      src={photo.url}
-                      alt={photo.path}
-                      className="aspect-[9/16] border-0 object-cover rounded-3xl sm:aspect-auto"
-                      width={900}
-                      height={1600}
-                    />
-                    <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl sm:h-[70%]" />
+                    {images.length > 0 ? (
+                      images.map((image, i) => (
+                        <Image
+                          key={i}
+                          src={photo.url}
+                          alt={photo.path}
+                          className={`aspect-[9/16] h-[85dvh] w-full border-0 object-cover rounded-3xl z-${images.length - i} ${i > 0 ? "hidden" : ""} sm:aspect-[10/14]`}
+                          quality={75}
+                          priority
+                          width={900}
+                          height={1600}
+                        />
+                      ))
+                    ) : (
+                      <div>
+                        <p>No images</p>
+                      </div>
+                    )}
+                    <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -121,7 +150,10 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
           <CarouselNext className="hidden h-full rounded-3xl p-2 md:block" />
         </Carousel>
       ) : (
-        <SwipeSkeleton />
+        <div className="flex w-full h-full mt-4 flex-col items-center justify-center">
+          <Frown size={48} />
+          <h2 className="text-3xl">No swipes</h2>
+        </div>
       )}
     </>
   );
