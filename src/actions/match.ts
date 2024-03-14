@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 
 export const match = async (type: "accept" | "reject", userID: string) => {
   try {
@@ -33,7 +34,7 @@ export const match = async (type: "accept" | "reject", userID: string) => {
     });
 
     if (type === "accept") {
-      await db.chat.create({
+      const chat = await db.chat.create({
         data: {
           participants: {
             createMany: {
@@ -42,7 +43,26 @@ export const match = async (type: "accept" | "reject", userID: string) => {
             },
           },
         },
+        include: {
+          participants: {
+            include: {
+              user: {
+                include: {
+                  images: true,
+                },
+              },
+            },
+          },
+          messages: {
+            take: 1,
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
       });
+
+      pusherServer.trigger(user.id, "chat:new", chat);
     }
 
     return { success: "Matched successfully" };

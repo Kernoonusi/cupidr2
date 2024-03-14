@@ -16,12 +16,12 @@ const ChatLayout = ({
   return (
     <main className="w-full h-full mx-auto mt-4 flex sm:max-w-7xl">
       <div
-        className={`${Number.isFinite(Number(pathname || NaN)) ? (sm ? "" : " hidden ") : " flex "} sm:border-r sm:min-w-[300px]`}
+        className={`${pathname ? (sm ? "" : " hidden ") : " flex "} sm:border-r sm:min-w-[300px]`}
       >
         {children}
       </div>
       <div
-        className={`flex-grow ${Number.isFinite(Number(pathname || NaN)) || sm ? "" : "hidden"} sm:flex`}
+        className={`flex-grow ${pathname || sm ? "" : "hidden"} sm:flex`}
       >
         {room}
       </div>
