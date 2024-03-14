@@ -21,6 +21,9 @@ export const getMatches = async () => {
           },
         },
       },
+      include: {
+        images: true,
+      },
     });
 
     return { success: "Retrieved matches", users };
