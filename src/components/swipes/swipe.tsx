@@ -29,6 +29,7 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const swipeElementRef = useRef<HTMLDivElement>(null);
+  const activeIndex = useRef(-1);
 
   const loadSwipes = (amount: number) => {
     getSwipes(amount).then((data) => {
@@ -45,7 +46,7 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
         (user) => !swipes.some((swipe) => swipe.id === user.id),
       );
       const newImages = newUsers?.flatMap((user) => user.images) || [];
-      setSwipes((prevSwipes) => [...prevSwipes, ...newUsers || []]);
+      setSwipes((prevSwipes) => [...prevSwipes, ...(newUsers || [])]);
       setImages((prevImages) => [
         ...prevImages.filter((image) => !newImages.includes(image)),
         ...newImages,
@@ -68,8 +69,6 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
     startTransition(() => {
       const swipeElement = swipeElementRef.current;
       const handleTransitionEnd = () => {
-        swipeElementRef.current?.classList.toggle("dislikeSwipe");
-        swipeElementRef.current?.classList.toggle("overflow-hidden");
         setSwipes((prevSwipes) => prevSwipes.slice(1));
         setImages((prevImages) => prevImages.slice(1));
       };
@@ -132,9 +131,9 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
       {swipes.length > 0 ? (
         swipes.map((swipe, i) => (
           <Carousel
-            className={`bg-slate-200 rounded-3xl mt-4 max-h-[80dvh] md:max-h-[85dvh] ${i > 0 ? "-z-30 absolute top-0" : "z-10 relative"} ${i > 1 ? "-z-40" : i > 2 ? "hidden" : ""}`}
-            key={swipe.id}
+            className={`bg-slate-200 aspect-[9/16] rounded-3xl mt-4 max-h-[80dvh] md:max-h-[85dvh]  ${i == 0 ? "z-10 relative" : i == 1 ? "-z-30 absolute top-0 right-1/2 translate-x-1/2" : i == 2 ? "-z-40 absolute top-0 right-1/2 translate-x-1/2" : "hidden"}`}
             ref={i === 0 ? swipeElementRef : undefined}
+            key={swipe.id}
           >
             <CarouselContent>
               {swipe.images.length > 0 ? (

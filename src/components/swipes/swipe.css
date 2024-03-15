@@ -1,29 +1,43 @@
+:root {
+  --swipe-animation-duration: 0.5s;
+  --swipe-animation-timing-function: ease-in-out;
+}
 @keyframes dislikeAnimation {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-200%);
-    }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-200%);
+    opacity: 0;
+  }
 }
 
 @keyframes likeAnimation {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(200%);
-    }
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(200%);
+    opacity: 0;
+  }
 }
 
 .likeSwipe {
-    animation: likeAnimation .5s ease-in-out;
-    -webkit-transition: .5s ease-in-out;
-    transition: .5s ease-in-out;
+  animation: likeAnimation var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function) forwards;
+  -webkit-transition: var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function);
+  transition: var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function);
 }
 
 .dislikeSwipe {
-    animation: dislikeAnimation .5s ease-in-out;
-    -webkit-transition: .5s ease-in-out;
-    transition: .5s ease-in-out;
+  animation: dislikeAnimation var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function) forwards;
+  -webkit-transition: var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function);
+  transition: var(--swipe-animation-duration)
+    var(--swipe-animation-timing-function);
 }
