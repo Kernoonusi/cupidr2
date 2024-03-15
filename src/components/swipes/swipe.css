@@ -1,0 +1,29 @@
+@keyframes dislikeAnimation {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-200%);
+    }
+}
+
+@keyframes likeAnimation {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(200%);
+    }
+}
+
+.likeSwipe {
+    animation: likeAnimation .5s ease-in-out;
+    -webkit-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}
+
+.dislikeSwipe {
+    animation: dislikeAnimation .5s ease-in-out;
+    -webkit-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}

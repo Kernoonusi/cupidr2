@@ -1,7 +1,7 @@
 "use client";
 import { Frown, Heart, MapPin, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { dislike } from "@/actions/dislike";
 import { like } from "@/actions/like";
 import { User } from "@/types";
+import "./swipe.css";
 
 export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const { toast } = useToast();
@@ -27,6 +28,7 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+  const swipeElementRef = useRef<HTMLDivElement>(null);
 
   const loadSwipes = (amount: number) => {
     getSwipes(amount).then((data) => {
@@ -39,13 +41,16 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
       setSuccess(successMessage);
       setError(errorMessage);
 
-      setSwipes((prevSwipes) => [...prevSwipes, ...(users || [])]);
-      if (users) {
-        setImages((prevImages) => [
-          ...prevImages,
-          ...(users?.flatMap((user) => user.images) || []),
-        ]);
-      }
+      const newUsers = users?.filter(
+        (user) => !swipes.some((swipe) => swipe.id === user.id),
+      );
+      const newImages = newUsers?.flatMap((user) => user.images) || [];
+      setSwipes((prevSwipes) => [...prevSwipes, ...newUsers || []]);
+      setImages((prevImages) => [
+        ...prevImages.filter((image) => !newImages.includes(image)),
+        ...newImages,
+      ]);
+      console.log(images, swipes);
     });
   };
 
@@ -61,94 +66,140 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
 
   const dislikeSwipe = (id: string) => {
     startTransition(() => {
-      dislike(id);
-      console.log(images, swipes);
-      if (swipes.length !== 0 && images.length !== 0) {
-        swipes.shift();
-        images.shift();
+      const swipeElement = swipeElementRef.current;
+      const handleTransitionEnd = () => {
+        swipeElementRef.current?.classList.toggle("dislikeSwipe");
+        swipeElementRef.current?.classList.toggle("overflow-hidden");
+        setSwipes((prevSwipes) => prevSwipes.slice(1));
+        setImages((prevImages) => prevImages.slice(1));
+      };
+
+      if (swipeElement) {
+        console.log("swiped dislike", swipeElement);
+        swipeElement.classList.toggle("dislikeSwipe");
+        swipeElement.classList.toggle("overflow-hidden");
+        swipeElement.addEventListener("animationend", handleTransitionEnd);
       }
-      if (swipes.length < 3) {
-        loadSwipes(3);
-      }
+
+      dislike(id).then((data) => {
+        if (swipes.length < 3) {
+          loadSwipes(3);
+        }
+        if (data?.error) {
+          toast({
+            title: "Error",
+            description: data.error,
+            variant: "destructive",
+          });
+        }
+      });
     });
   };
   const likeSwipe = (id: string) => {
     startTransition(() => {
-      like(id);
-      console.log("images ", images, "swipes ", swipes);
+      const swipeElement = swipeElementRef.current;
+      const handleTransitionEnd = () => {
+        swipeElementRef.current?.classList.toggle("likeSwipe");
+        swipeElementRef.current?.classList.toggle("overflow-hidden");
+        setSwipes((prevSwipes) => prevSwipes.slice(1));
+        setImages((prevImages) => prevImages.slice(1));
+      };
 
-      if (swipes.length !== 0 && images.length !== 0) {
-        swipes.shift();
-        images.shift();
+      if (swipeElement) {
+        console.log("swiped like", swipeElement);
+        swipeElement.classList.toggle("likeSwipe");
+        swipeElement.classList.toggle("overflow-hidden");
+        swipeElement.addEventListener("animationend", handleTransitionEnd);
       }
-      if (swipes.length < 3) {
-        loadSwipes(3);
-      }
+
+      like(id).then((data) => {
+        if (swipes.length < 3) {
+          loadSwipes(3);
+        }
+        if (data?.error) {
+          toast({
+            title: "Error",
+            description: data.error,
+            variant: "destructive",
+          });
+        }
+      });
     });
   };
 
   return (
     <>
       {swipes.length > 0 ? (
-        <Carousel className="bg-slate-200 rounded-3xl relative mt-4 max-w-screen-xl md:max-w-[65dvw] max-h-[80dvh] md:max-h-[85dvh]">
-          <CarouselContent>
-            {swipes[0].images.map((photo) => (
-              <CarouselItem className="overflow-hidden" key={photo.id}>
-                <Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
-                  <CardContent className="p-0 relative rounded-3xl border-0">
-                    {images.length > 0 ? (
-                      images.map((image, i) => (
+        swipes.map((swipe, i) => (
+          <Carousel
+            className={`bg-slate-200 rounded-3xl mt-4 max-h-[80dvh] md:max-h-[85dvh] ${i > 0 ? "-z-30 absolute top-0" : "z-10 relative"} ${i > 1 ? "-z-40" : i > 2 ? "hidden" : ""}`}
+            key={swipe.id}
+            ref={i === 0 ? swipeElementRef : undefined}
+          >
+            <CarouselContent>
+              {swipe.images.length > 0 ? (
+                swipe.images.map((photo) => (
+                  <CarouselItem className="overflow-hidden" key={photo.id}>
+                    <Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
+                      <CardContent className="p-0 relative rounded-3xl h-[85dvh] aspect-[9/16] border-0 md:aspect-[3/4]">
                         <Image
-                          key={i}
+                          key={photo.id}
                           src={photo.url}
                           alt={photo.path}
-                          className={`aspect-[9/16] h-[85dvh] w-full border-0 object-cover rounded-3xl z-${images.length - i} ${i > 0 ? "hidden" : ""} sm:aspect-[10/14]`}
-                          quality={75}
+                          className={`border-0 object-cover rounded-3xl`}
+                          quality={85}
                           priority
-                          width={900}
-                          height={1600}
+                          fill
                         />
-                      ))
-                    ) : (
-                      <div>
-                        <p>No images</p>
+                        <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))
+              ) : (
+                <CarouselItem className="overflow-hidden">
+                  <Card className="rounded-3xl overflow-hidden max-h-[80dvh]  border-0">
+                    <CardContent className="p-0 relative rounded-3xl border-0">
+                      <div className="aspect-[9/16] w-full h-full flex justify-center items-center border-0 object-cover rounded-3xl">
+                        <p className="text-3xl w-full h-full">No images</p>
                       </div>
-                    )}
-                    <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="w-3/4 absolute bottom-32 left-10 text-white">
-            <h2 className="text-3xl">
-              {swipes[0].name}, {swipes[0].age}
-            </h2>
-            <p>{swipes[0].bio}</p>
-            <p className="flex items-center gap-1">
-              <MapPin />
-              {swipes[0].location}
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => dislikeSwipe(swipes[0].id)}
-            className={`absolute w-fit h-fit p-6 rounded-full border-0 bg-secondary dark:bg-secondary left-10 bottom-8`}
-          >
-            <X size={36} />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => likeSwipe(swipes[0].id)}
-            className={`absolute w-fit h-fit p-6 rounded-full border-0 bg-primary dark:bg-primary right-10 bottom-8 `}
-          >
-            <Heart size={36} />
-          </Button>
-          <CarouselPrevious className="hidden h-full rounded-3xl p-2 md:block" />
-          <CarouselNext className="hidden h-full rounded-3xl p-2 md:block" />
-        </Carousel>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              )}
+            </CarouselContent>
+            <div className="w-3/4 absolute bottom-32 left-10 text-white">
+              <h2 className="text-3xl">
+                {swipe.name}, {swipe.age}
+              </h2>
+              <p>{swipe.bio}</p>
+              <p className="flex items-center gap-1">
+                <MapPin />
+                {swipe.location}
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={isPending}
+              onClick={() => dislikeSwipe(swipe.id)}
+              className={`absolute w-fit h-fit p-6 rounded-full border-0 bg-secondary dark:bg-secondary left-10 bottom-8`}
+            >
+              <X size={36} />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={isPending}
+              onClick={() => likeSwipe(swipe.id)}
+              className={`absolute w-fit h-fit p-6 rounded-full border-0 bg-primary dark:bg-primary right-10 bottom-8 `}
+            >
+              <Heart size={36} />
+            </Button>
+            <CarouselPrevious className="hidden h-full rounded-3xl p-2 md:block" />
+            <CarouselNext className="hidden h-full rounded-3xl p-2 md:block" />
+          </Carousel>
+        ))
       ) : (
         <div className="flex w-full h-full mt-4 flex-col items-center justify-center">
           <Frown size={48} />

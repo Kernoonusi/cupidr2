@@ -68,7 +68,7 @@ export default async function Matches() {
                     <Card className="rounded-3xl overflow-hidden max-h-[80dvh]  border-0">
                       <CardContent className="p-0 relative rounded-3xl border-0">
                         <div className="aspect-[9/16] w-full h-full flex justify-center items-center border-0 object-cover rounded-3xl">
-                          <p className="text-3xl">No images</p>
+                          <p className="text-3xl w-full h-full">No images</p>
                         </div>
                       </CardContent>
                     </Card>

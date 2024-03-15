@@ -35,7 +35,7 @@ export default async function Swipes() {
   }
 
   return (
-    <main className="max-w-xl mx-auto px-4 relative lg:max-w-[70dvw]">
+    <main className="max-w-xl mx-auto px-4 relative">
       {swipes.length > 0 ? (
         <Swipe initSwipes={swipes} />
       ) : (

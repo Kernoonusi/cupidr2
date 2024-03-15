@@ -21,7 +21,7 @@ export default async function Header() {
           </li>
           <li className="has-[:checked]:border-b">
             <LinkButton href="/matches" passHref>
-              <p className="hidden md:block font-medium">Likes</p>
+              <p className="hidden md:block font-medium">Matches</p>
               <Heart />
             </LinkButton>
           </li>
