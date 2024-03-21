@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SendHorizontal } from "lucide-react";
 
@@ -11,93 +11,7 @@ import { getMessages } from "@/actions/get-messages";
 import { sendMessage } from "@/actions/send-message";
 import { pusherClient } from "@/lib/pusher";
 import { getParticipants } from "@/actions/get-participants";
-
-// const defaultChatMessages = [
-//   {
-//     id: 1,
-//     name: "John",
-//     message: "Hi, how are you?",
-//     time: "10:00",
-//   },
-//   {
-//     id: 2,
-//     name: "Jane",
-//     message: "I'm good, thanks!",
-//     time: "10:01",
-//   },
-//   {
-//     id: 3,
-//     name: "John",
-//     message: "What about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 4,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 5,
-//     name: "John",
-//     message: "I'm also good, how about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 6,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 7,
-//     name: "John",
-//     message: "I'm also good, how about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 8,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:02",
-//   },
-//   {
-//     id: 9,
-//     name: "John",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-//   {
-//     id: 10,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-//   {
-//     id: 11,
-//     name: "John",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-//   {
-//     id: 12,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-//   {
-//     id: 13,
-//     name: "John",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-//   {
-//     id: 14,
-//     name: "Jane",
-//     message: "I'm also good, how about you?",
-//     time: "10:03",
-//   },
-// ];
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface IFormInput {
   message: string;
@@ -109,6 +23,7 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
   }>();
   const [chatMessages, setChatMessages] = useState<Record<string, any>[]>();
   const messagesEndRef = useRef<null | HTMLSpanElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm({
     defaultValues: {
@@ -117,30 +32,37 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
   });
 
   useEffect(() => {
-    getMessages(params.chatId).then((data) => {
-      if (!data) {
-        return;
-      }
-      setChatMessages(data.messages);
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
     });
+  }, [isPending]);
 
-    getParticipants(params.chatId).then((data) => {
-      if (!data) {
-        return;
-      }
-      setParticipants(data.participants);
-    });
+  useEffect(() => {
+    startTransition(() => {
+      getMessages(params.chatId).then((data) => {
+        if (!data) {
+          return;
+        }
+        setChatMessages(data.messages);
+      });
 
-    pusherClient.subscribe(params.chatId);
-    pusherClient.bind("message:new", (newMessage: Record<string, any>) => {
-      setChatMessages((prevChats) => {
-        const messageExists = prevChats?.some(
-          (message) => message.id === newMessage.id,
-        );
-        return messageExists ? prevChats : [...(prevChats || []), newMessage];
+      getParticipants(params.chatId).then((data) => {
+        if (!data) {
+          return;
+        }
+        setParticipants(data.participants);
+      });
+
+      pusherClient.subscribe(params.chatId);
+      pusherClient.bind("message:new", (newMessage: Record<string, any>) => {
+        setChatMessages((prevChats) => {
+          const messageExists = prevChats?.some(
+            (message) => message.id === newMessage.id,
+          );
+          return messageExists ? prevChats : [...(prevChats || []), newMessage];
+        });
       });
     });
-
     return () => {
       pusherClient.unsubscribe(params.chatId);
       pusherClient.unbind("message:new");
@@ -159,32 +81,51 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
     [form, params.chatId],
   );
 
+  const skeleton = [...Array(10).keys()].map((i) => (
+    <div
+      key={i}
+      className="grid grid-cols-[auto_1fr] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
+    >
+      <Skeleton className="h-12 w-12 rounded-full row-span-2" />
+      <Skeleton className="h-4 w-4/12" />
+      <Skeleton className="h-4 w-10/12" />
+    </div>
+  ));
+
   return (
-    <main className="max-w-7xl w-full px-4 overflow-y-auto flex flex-col justify-end ">
-      {chatMessages &&
-        participants &&
-        chatMessages?.length > 0 &&
-        chatMessages.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="grid grid-cols-[auto_1fr_auto] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
-            >
-              <Avatar className="grid row-span-2">
-                <AvatarImage src={participants[item.senderId].image} />
-                <AvatarFallback>
-                  {participants[item.senderId].name}
-                </AvatarFallback>
-              </Avatar>
-              <h2 className="text-lg font-bold">
-                {participants[item.senderId].name}
-              </h2>
-              <small>{new Date(item.createdAt).toLocaleTimeString()}</small>
-              <p>{item.message}</p>
-            </div>
-          );
-        })}
-      <span ref={messagesEndRef}></span>
+    <main className="max-w-7xl w-full px-4 flex flex-col justify-end">
+      {isPending ? (
+        <div className="w-full h-[80dvh] flex flex-col justify-end pr-2 overflow-x-auto overflow-y-auto sm:w-full">
+          {skeleton}
+        </div>
+      ) : (
+        <div className="w-full h-[80dvh] pr-2 overflow-x-auto overflow-y-auto sm:w-full">
+          {chatMessages &&
+            participants &&
+            chatMessages?.length > 0 &&
+            chatMessages.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-[auto_1fr_auto] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
+                >
+                  <Avatar className="grid row-span-2">
+                    <AvatarImage src={participants[item.senderId].image} />
+                    <AvatarFallback>
+                      {participants[item.senderId].name}
+                    </AvatarFallback>
+                  </Avatar>
+                  <h2 className="text-lg font-bold">
+                    {participants[item.senderId].name}
+                  </h2>
+                  <small>{new Date(item.createdAt).toLocaleTimeString()}</small>
+                  <p>{item.message}</p>
+                </div>
+              );
+            })}
+          <span ref={messagesEndRef} />
+        </div>
+      )}
 
       <Form {...form}>
         <form

@@ -14,7 +14,7 @@ const ChatLayout = ({
   const pathname = usePathname()?.split("/")[2];
 
   return (
-    <main className="w-full h-full mx-auto mt-4 flex sm:max-w-7xl">
+    <main className="w-full h-full mx-auto mt-4 flex sm:grid sm:grid-cols-[0.3fr_1fr] sm:max-w-7xl">
       <div
         className={`${pathname ? (sm ? "" : " hidden ") : " flex "} sm:border-r sm:min-w-[300px]`}
       >
