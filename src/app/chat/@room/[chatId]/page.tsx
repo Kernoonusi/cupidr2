@@ -1,35 +1,39 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { SendHorizontal } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { getMessages } from "@/actions/get-messages";
 import { sendMessage } from "@/actions/send-message";
 import { pusherClient } from "@/lib/pusher";
 import { getParticipants } from "@/actions/get-participants";
-import { Skeleton } from "@/components/ui/skeleton";
-
-interface IFormInput {
-  message: string;
-}
+import { MessageForm } from "@/components/chat/message-form";
+import { ChatListSkeleton } from "@/components/chat/chat-list-skeleton";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { typing } from "@/actions/typing";
 
 export default function ChatField({ params }: { params: { chatId: string } }) {
+  const user = useCurrentUser();
+
   const [participants, setParticipants] = useState<{
     [key: string]: Record<string, any>;
   }>();
+
+  const [isTyping, setIsTyping] = useState(false);
+  const [typerName, setTyperName] = useState<string | null>(null);
+
   const [chatMessages, setChatMessages] = useState<Record<string, any>[]>();
   const messagesEndRef = useRef<null | HTMLSpanElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm({
-    defaultValues: {
-      message: "",
-    },
-  });
+  const startTyping = (typerName: string) => {
+    setIsTyping(true);
+    setTyperName(typerName);
+    setTimeout(() => {
+      setTyperName(null);
+      setIsTyping(false);
+    }, 3000);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -54,6 +58,16 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
       });
 
       pusherClient.subscribe(params.chatId);
+
+      pusherClient.bind(
+        "message:typing",
+        (typer: { id: string; name: string }) => {
+          if (typer.id !== user?.id) {
+            startTyping(typer.name);
+          }
+        },
+      );
+
       pusherClient.bind("message:new", (newMessage: Record<string, any>) => {
         setChatMessages((prevChats) => {
           const messageExists = prevChats?.some(
@@ -63,13 +77,21 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
         });
       });
     });
+
     return () => {
       pusherClient.unsubscribe(params.chatId);
+      pusherClient.unbind("message:type");
       pusherClient.unbind("message:new");
     };
-  }, [params.chatId]);
+  }, [params.chatId, user?.id]);
 
-  const onSubmit: SubmitHandler<IFormInput> = useCallback(
+  const form = useForm({
+    defaultValues: {
+      message: "",
+    },
+  });
+
+  const onSubmit: SubmitHandler<{ message: string }> = useCallback(
     (data) => {
       sendMessage(params.chatId, data.message).then(() => {
         form.reset();
@@ -81,28 +103,27 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
     [form, params.chatId],
   );
 
-  const skeleton = [...Array(10).keys()].map((i) => (
-    <div
-      key={i}
-      className="grid grid-cols-[auto_1fr] grid-rows-2 py-2 gap-1 gap-x-6 items-center "
-    >
-      <Skeleton className="h-12 w-12 rounded-full row-span-2" />
-      <Skeleton className="h-4 w-4/12" />
-      <Skeleton className="h-4 w-10/12" />
-    </div>
-  ));
+  let canPublish = true;
+  const handleTyping = () => {
+    if (canPublish) {
+      typing(params.chatId);
+
+      canPublish = false;
+      setTimeout(() => {
+        canPublish = true;
+      }, 300);
+    }
+  };
 
   return (
-    <main className="max-w-7xl w-full px-4 flex flex-col justify-end">
+    <main className="max-w-7xl w-full px-4 flex flex-col h-full justify-between">
       {isPending ? (
-        <div className="w-full h-[80dvh] flex flex-col justify-end pr-2 overflow-x-auto overflow-y-auto sm:w-full">
-          {skeleton}
-        </div>
+        Array.from({ length: 10 }).map((_, index) => (
+          <ChatListSkeleton key={index} />
+        ))
       ) : (
-        <div className="w-full h-[80dvh] pr-2 overflow-x-auto overflow-y-auto sm:w-full">
-          {chatMessages &&
-            participants &&
-            chatMessages?.length > 0 &&
+        <div className="w-full h-full max-h-[75dvh] pr-2 overflow-x-auto overflow-y-auto sm:w-full">
+          {chatMessages && participants && chatMessages?.length > 0 ? (
             chatMessages.map((item) => {
               return (
                 <div
@@ -122,44 +143,23 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
                   <p>{item.message}</p>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center">
+              <h2 className="text-2xl font-medium">No messages yet 😔.</h2>
+            </div>
+          )}
           <span ref={messagesEndRef} />
         </div>
       )}
-
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-2 items-center sticky bottom-0 py-2 px-2 dark:bg-dark"
-        >
-          <FormField
-            control={form.control}
-            name="message"
-            rules={{
-              required: "Type a message",
-            }}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    className="bg-gray-100 shadow-md dark:bg-slate-800"
-                    type="text"
-                    placeholder="Type a message"
-                    {...field}
-                    autoComplete="off"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button
-            type="submit"
-            className="bg-primary shadow-md dark:bg-primary"
-          >
-            <SendHorizontal size={24} />
-          </Button>
-        </form>
-      </Form>
+      <div className="relative flex-grow flex flex-col justify-center gap-y-2 py-2">
+        <p>{isTyping && `${typerName} is typing...`}</p>
+        <MessageForm
+          form={form}
+          onSubmit={onSubmit}
+          handleTyping={handleTyping}
+        />
+      </div>
     </main>
   );
 }
