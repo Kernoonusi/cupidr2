@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface MessageFormProps {
-  form: UseFormReturn<{ message: string }, any, { message: string }>;
+  form: UseFormReturn<{ message: string }>;
   onSubmit: SubmitHandler<{ message: string }>;
   handleTyping: ChangeEventHandler<HTMLInputElement>;
 }

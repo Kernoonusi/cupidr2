@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getMessages } from "@/actions/get-messages";
@@ -85,7 +85,7 @@ export default function ChatField({ params }: { params: { chatId: string } }) {
     };
   }, [params.chatId, user?.id]);
 
-  const form = useForm({
+  const form = useForm<{ message: string }>({
     defaultValues: {
       message: "",
     },
