@@ -1,6 +1,7 @@
 import "next-auth/jwt";
 import { Gender, GenderPreference, UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
+import type { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { db } from "@/lib/db";
@@ -69,20 +70,16 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth providers to sign in without email verification
       if (account?.provider !== "credentials") {
         return true;
       }
 
       if (user.id) {
         const existingUser = await getUserById(user.id);
-
-        // If the user is not verified, prevent them from signing in
         if (!existingUser?.emailVerified) {
           return false;
         }
       }
-
       return true;
     },
     async session({ token, session }) {
@@ -118,7 +115,6 @@ export const {
 
       if (existingUser.id) {
         const existingAccount = await getAccountByUserId(existingUser.id);
-
         token.isOAuth = !!existingAccount;
       }
 
@@ -131,17 +127,15 @@ export const {
       token.location = existingUser.location;
       token.gender = existingUser.gender;
       token.preferences = existingUser.preferences[0];
-      token.images = existingUser.images.map((image) => {
-        return {
-          url: image.url,
-          path: image.path,
-        };
-      });
+      token.images = existingUser.images.map((image) => ({
+        url: image.url,
+        path: image.path,
+      }));
 
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(db) as Adapter, // Указываем тип PrismaAdapter как Adapter
   session: { strategy: "jwt" },
   ...authConfig,
 });
