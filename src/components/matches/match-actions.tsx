@@ -2,7 +2,7 @@
 
 import { Heart, Loader2, X } from "lucide-react";
 import { useTransition } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { match } from "@/actions/match";
