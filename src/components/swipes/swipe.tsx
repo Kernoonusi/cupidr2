@@ -18,6 +18,37 @@ import { dislike } from "@/actions/dislike";
 import { like } from "@/actions/like";
 import { User } from "@/types";
 import "./swipe.css";
+import { useDirectLink } from "@/hooks/use-direct-link";
+
+const CarouselImageItem = ({
+  photo,
+}: {
+  photo: {
+    id: string;
+    userId: string;
+    url: string;
+    path: string;
+  };
+}) => {
+  return (
+    <CarouselItem className="overflow-hidden" key={photo.id}>
+      <Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
+        <CardContent className="p-0 relative rounded-3xl h-[85dvh] aspect-[9/16] border-0 md:aspect-[3/4]">
+          <Image
+            key={photo.id}
+            src={useDirectLink(photo.url)}
+            alt={photo.path}
+            className={`border-0 object-cover rounded-3xl`}
+            quality={85}
+            priority
+            fill
+          />
+          <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
+        </CardContent>
+      </Card>
+    </CarouselItem>
+  );
+};
 
 export function Swipe({ initSwipes }: { initSwipes: User[] }) {
   const { toast } = useToast();
@@ -138,22 +169,7 @@ export function Swipe({ initSwipes }: { initSwipes: User[] }) {
             <CarouselContent>
               {swipe.images.length > 0 ? (
                 swipe.images.map((photo) => (
-                  <CarouselItem className="overflow-hidden" key={photo.id}>
-                    <Card className="rounded-3xl overflow-hidden max-h-[80dvh] md:max-h-[85dvh] border-0">
-                      <CardContent className="p-0 relative rounded-3xl h-[85dvh] aspect-[9/16] border-0 md:aspect-[3/4]">
-                        <Image
-                          key={photo.id}
-                          src={photo.url}
-                          alt={photo.path}
-                          className={`border-0 object-cover rounded-3xl`}
-                          quality={85}
-                          priority
-                          fill
-                        />
-                        <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl" />
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
+                  <CarouselImageItem key={photo.id} photo={photo} />
                 ))
               ) : (
                 <CarouselItem className="overflow-hidden">

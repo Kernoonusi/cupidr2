@@ -4,6 +4,7 @@ import Image from "next/image";
 import { EmptyPhoto } from "@/components/account/empty-photo";
 import { DeletePhoto } from "@/components/account/delete-photo";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useDirectLink } from "@/hooks/use-direct-link";
 
 interface UserImage {
   url: string;
@@ -11,21 +12,11 @@ interface UserImage {
 }
 
 const PhotoItem = ({ image }: { image: UserImage }) => {
-  // Преобразуем ссылку Dropbox в прямую ссылку
-  const getDirectLink = (url: string) => {
-    if (url.includes("dropbox.com")) {
-      return url
-        .replace("www.dropbox.com", "dl.dropboxusercontent.com")
-        .replace("?dl=0", "");
-    }
-    return url;
-  };
-
   return (
     <div className="relative">
       <DeletePhoto path={image.path} />
       <Image
-        src={getDirectLink(image.url)}
+        src={useDirectLink(image.url)}
         alt="user photos"
         className="object-cover h-full w-full aspect-[3/4] rounded-lg"
         width={360}

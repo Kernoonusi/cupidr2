@@ -11,6 +11,37 @@ import {
 import { User } from "@/types";
 import { getMatches } from "@/actions/get-matches";
 import { DislikeMatch, LikeMatch } from "@/components/matches/match-actions";
+import { useDirectLink } from "@/hooks/use-direct-link";
+
+const CarouselImageItem = ({
+  image,
+  i,
+}: {
+  image: {
+    id: string;
+    userId: string;
+    url: string;
+    path: string;
+  };
+  i: number;
+}) => {
+  return (
+    <CarouselItem className="overflow-hidden" key={i}>
+      <Card className="rounded-3xl overflow-hidden max-h-[80dvh] border-0">
+        <CardContent className="p-0 relative rounded-3xl border-0">
+          <Image
+            src={useDirectLink(image.url)}
+            alt={image.path}
+            className="aspect-[9/16] border-0 w-full h-full object-cover rounded-3xl"
+            width={900}
+            height={1600}
+          />
+          <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl sm:h-[70%]" />
+        </CardContent>
+      </Card>
+    </CarouselItem>
+  );
+};
 
 export default async function Matches() {
   let matches: User[] = [];
@@ -48,20 +79,7 @@ export default async function Matches() {
               <CarouselContent>
                 {match.images.length > 0 ? (
                   match.images.map((image, i) => (
-                    <CarouselItem className="overflow-hidden" key={i}>
-                      <Card className="rounded-3xl overflow-hidden max-h-[80dvh] border-0">
-                        <CardContent className="p-0 relative rounded-3xl border-0">
-                          <Image
-                            src={image.url}
-                            alt={image.path}
-                            className="aspect-[9/16] border-0 w-full h-full object-cover rounded-3xl"
-                            width={900}
-                            height={1600}
-                          />
-                          <div className="absolute bottom-0 w-full h-[40%] bg-gradient-to-t from-black rounded-3xl sm:h-[70%]" />
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
+                    <CarouselImageItem key={image.id} image={image} i={i} />
                   ))
                 ) : (
                   <CarouselItem className="overflow-hidden">
