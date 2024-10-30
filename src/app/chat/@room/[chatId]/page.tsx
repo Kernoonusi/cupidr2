@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition, use } from "react";
 import { SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,7 +12,8 @@ import { ChatListSkeleton } from "@/components/chat/chat-list-skeleton";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { typing } from "@/actions/typing";
 
-export default function ChatField({ params }: { params: { chatId: string } }) {
+export default function ChatField(props: { params: Promise<{ chatId: string }> }) {
+  const params = use(props.params);
   const user = useCurrentUser();
 
   const [participants, setParticipants] = useState<{
